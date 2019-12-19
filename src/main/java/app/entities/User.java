@@ -9,6 +9,7 @@ public abstract class User extends Entity {
     protected String password;
 
     public User() {
+        super();
     }
 
     public User(String firstName, String lastName, String email, String phoneNumber, String password) {

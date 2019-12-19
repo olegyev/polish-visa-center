@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SuperAdminPageServlet extends HttpServlet {
+    private AdminService adminService = new AdminService();
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/super_admin_page.jsp");
@@ -21,14 +23,13 @@ public class SuperAdminPageServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        AdminService service = new AdminService();
         Admin admin = null;
         List<Admin> admins = new ArrayList<Admin>();
 
         String action = req.getParameter("action");
 
         if (action.equals("show_all_admins")) {
-            admins = service.findAllAdmins();
+            admins = adminService.findAllAdmins();
 
         } else if (action.equals("find_admin")) {
             String searchKey = req.getParameter("search_key").trim();
@@ -36,15 +37,15 @@ public class SuperAdminPageServlet extends HttpServlet {
 
             try {
                 id = Long.parseLong(searchKey);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
             }
 
             if (id != 0) {
-                admin = service.findAdminById(id);
+                admin = adminService.findAdminById(id);
             } else if (searchKey.contains("@")) {
-                admin = service.findAdminByEmail(searchKey);
+                admin = adminService.findAdminByEmail(searchKey);
             } else {
-                admins = service.findAdminByLastName(searchKey);
+                admins = adminService.findAdminByLastName(searchKey);
             }
 
             if (admin != null) {

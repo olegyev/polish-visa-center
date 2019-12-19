@@ -73,8 +73,8 @@
                             <td><c:out value="${admin.getPosition().getTitle()}" /></td>
                             <td><c:out value="${admin.getEmail()}" /></td>
                             <td><c:out value="${admin.getPhoneNumber()}" /></td>
-                            <td><a href="update-admin?adminId=<c:out value="${admin.getId()}" />">Update</a></td>
-                            <td><a href="delete-admin?adminId=<c:out value="${admin.getId()}" />">Delete</a></td>
+                            <td><a href="super-admin-page/update-admin?adminId=<c:out value="${admin.getId()}" />">Update</a></td>
+                            <td><a href="super-admin-page/delete-admin?adminId=<c:out value="${admin.getId()}" />">Delete</a></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -85,7 +85,7 @@
             </c:when>
         </c:choose>
 
-        <p><a class="hand" onclick="location.href='/add-admin'">Add admin</a></p>
+        <p><a class="hand" onclick="location.href='/super-admin-page/add-admin'">Add admin</a></p>
     </div>
 
     <div>

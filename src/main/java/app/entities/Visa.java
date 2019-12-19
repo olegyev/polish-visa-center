@@ -14,6 +14,7 @@ public class Visa extends Entity {
     private Date expiryDate;
 
     public Visa() {
+        super();
     }
 
     public Visa(long id, long clientId, String visaNum, VisaType visaType, Date issueDate, Date expiryDate) {

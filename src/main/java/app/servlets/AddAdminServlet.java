@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AddAdminServlet extends HttpServlet {
+    private AdminService adminService = new AdminService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/add_admin.jsp");
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/views/super-admin-page/add_admin.jsp");
         requestDispatcher.forward(req, resp);
     }
 
@@ -30,8 +32,7 @@ public class AddAdminServlet extends HttpServlet {
 
         Admin admin = new Admin(firstName, lastName, position, email, phoneNumber, password);
 
-        AdminService service = new AdminService();
-        boolean isAdded = service.addAdmin(admin);
+        boolean isAdded = adminService.addAdmin(admin);
 
         if (isAdded) {
             resp.sendRedirect("/super-admin-page");

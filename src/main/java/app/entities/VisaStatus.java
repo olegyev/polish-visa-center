@@ -8,6 +8,7 @@ public class VisaStatus extends Entity {
     private VisaStatus status;
 
     public VisaStatus() {
+        super();
     }
 
     public VisaStatus(long id, long clientId, VisaStatus status) {

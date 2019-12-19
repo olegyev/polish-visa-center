@@ -7,8 +7,9 @@ import app.entities.Admin;
 import java.util.List;
 
 public class AdminService {
+    private AdminDao dao = new AdminDao();
+
     public boolean addAdmin(Admin admin) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -24,7 +25,6 @@ public class AdminService {
     }
 
     public Admin login(String email, String password) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -37,7 +37,6 @@ public class AdminService {
     }
 
     public List<Admin> findAllAdmins() {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -50,7 +49,6 @@ public class AdminService {
     }
 
     public Admin findAdminById(long id) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -63,7 +61,6 @@ public class AdminService {
     }
 
     public Admin findAdminByEmail(String email) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -76,7 +73,6 @@ public class AdminService {
     }
 
     public List<Admin> findAdminByLastName(String lastName) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -89,7 +85,6 @@ public class AdminService {
     }
 
     public boolean deleteAdmin(long id) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -102,7 +97,6 @@ public class AdminService {
     }
 
     public Admin updateAdmin(Admin admin) {
-        AdminDao dao = new AdminDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 

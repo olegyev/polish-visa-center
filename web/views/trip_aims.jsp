@@ -32,15 +32,15 @@
 
 <div>
     <h2>Please specify the aim of the trip</h2>
-    <p><a class="hand" onclick="location.href='/c-visa'">Tourism/Other private visits</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Transit</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Business/Work</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Study or training events or activities</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Close Relatives/Family Members Visits</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Medical Treatment</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Official delegations</a></p>
-    <p><a class="hand" onclick="location.href='/c-visa'">Other travel aims</a></p>
-    <p><a class="hand" onclick="location.href='/d-visa'">National Visa-D</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Tourism/Other private visits</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Transit</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Business/Work</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Study or training events or activities</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Close Relatives/Family Members Visits</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Medical Treatment</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Official delegations</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/c-visa'">Other travel aims</a></p>
+    <p><a class="hand" onclick="location.href='/visa-types/d-visa'">National Visa-D</a></p>
 </div>
 
 <div>

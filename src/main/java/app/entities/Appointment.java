@@ -11,6 +11,7 @@ public class Appointment extends Entity {
     private String city;
 
     public Appointment() {
+        super();
     }
 
     public Appointment(long id, long clientId, String city, Date appointmentDate, long appointmentTime) {

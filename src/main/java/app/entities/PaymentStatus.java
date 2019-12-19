@@ -9,6 +9,7 @@ public class PaymentStatus extends Entity {
     private boolean serviceFee;
 
     public PaymentStatus() {
+        super();
     }
 
     public PaymentStatus(long id, long clientId, boolean visaFee, boolean serviceFee) {

@@ -20,6 +20,7 @@ public enum AdminPosition {
                 return constant;
             }
         }
+
         return null;
     }
 }

@@ -2,6 +2,7 @@ package app.servlets;
 
 import app.entities.Admin;
 import app.entities.Client;
+import app.entities.enums.AdminPosition;
 import app.services.AdminService;
 import app.services.ClientService;
 import app.util.PasswordEncryptor;
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
+    private AdminService adminService = new AdminService();
+    private ClientService clientService = new ClientService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/login.jsp");
@@ -36,20 +40,25 @@ public class LoginServlet extends HttpServlet {
 
         if (session.getAttribute("admin_data") == null && session.getAttribute("client_data") == null) {
             if (isAdmin) {
-                AdminService service = new AdminService();
-                Admin admin = service.login(email, password);
+                Admin admin = adminService.login(email, password);
 
                 if (admin != null) {
+                    AdminPosition position = admin.getPosition();
                     req.getSession().setAttribute("admin_data", admin);
-                    resp.sendRedirect("/admin-page");
+
+                    if (position.equals(AdminPosition.OPERATOR)) {
+                        resp.sendRedirect("/admin-page");
+                    } else if (position.equals(AdminPosition.MANAGER)) {
+                        resp.sendRedirect("/super-admin-page");
+                    }
+
                 } else {
                     req.setAttribute("login_error", "Invalid login! Try again or register!");
                     doGet(req, resp);
                 }
 
             } else {
-                ClientService service = new ClientService();
-                Client client = service.login(email, password);
+                Client client = clientService.login(email, password);
 
                 if (client != null) {
                     req.getSession().setAttribute("client_data", client);
@@ -61,8 +70,8 @@ public class LoginServlet extends HttpServlet {
             }
 
         } else {
-            session.removeAttribute("client_data");
             session.removeAttribute("admin_data");
+            session.removeAttribute("client_data");
             doPost(req, resp);
         }
     }

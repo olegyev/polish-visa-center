@@ -5,8 +5,9 @@ import app.dao.EntityTransaction;
 import app.entities.Client;
 
 public class ClientService {
+    private ClientDao dao = new ClientDao();
+
     public boolean addClient(Client client) {
-        ClientDao dao = new ClientDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 
@@ -22,7 +23,6 @@ public class ClientService {
     }
 
     public Client login(String email, String password) {
-        ClientDao dao = new ClientDao();
         EntityTransaction transaction = new EntityTransaction();
         transaction.begin(dao);
 

@@ -21,6 +21,7 @@ public class DocumentsInfo extends Entity {
     private String polishOriginCertificate;
 
     public DocumentsInfo() {
+        super();
     }
 
     public DocumentsInfo(long id, long clientId, char requiredVisaType, String passportNum, String visaApplicationForm,

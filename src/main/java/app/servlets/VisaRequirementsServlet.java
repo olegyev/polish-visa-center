@@ -13,14 +13,14 @@ public class VisaRequirementsServlet extends HttpServlet {
         String requestPath = req.getServletPath();
         RequestDispatcher requestDispatcher;
 
-        String visaC = "/c-visa";
-        String visaD = "/d-visa";
+        String visaC = "/visa-types/c-visa";
+        String visaD = "/visa-types/d-visa";
 
         if (requestPath.equals(visaC)) {
-            requestDispatcher = req.getRequestDispatcher("views/c_visa.jsp");
+            requestDispatcher = req.getRequestDispatcher("/views/visa-types/c_visa.jsp");
             requestDispatcher.forward(req, resp);
         } else if (requestPath.equals(visaD)) {
-            requestDispatcher = req.getRequestDispatcher("views/d_visa.jsp");
+            requestDispatcher = req.getRequestDispatcher("/views/visa-types/d_visa.jsp");
             requestDispatcher.forward(req, resp);
         }
     }

@@ -13,6 +13,4 @@ public class AdminPageServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/admin_page.jsp");
         requestDispatcher.forward(req, resp);
     }
-
-
 }

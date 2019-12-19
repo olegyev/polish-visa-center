@@ -34,12 +34,12 @@
 
     <servlet-mapping>
         <servlet-name>visa-requirements</servlet-name>
-        <url-pattern>/c-visa</url-pattern>
+        <url-pattern>/visa-types/c-visa</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>visa-requirements</servlet-name>
-        <url-pattern>/d-visa</url-pattern>
+        <url-pattern>/visa-types/d-visa</url-pattern>
     </servlet-mapping>
 
     <!-- login servlet -->
@@ -86,6 +86,17 @@
         <url-pattern>/admin-page/*</url-pattern>
     </filter-mapping>
 
+    <!-- super-admin filter -->
+    <filter>
+        <filter-name>super-admin-filter</filter-name>
+        <filter-class>app.servlets.filters.SuperAdminFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>super-admin-filter</filter-name>
+        <url-pattern>/super-admin-page/*</url-pattern>
+    </filter-mapping>
+
     <!-- client-page servlet -->
     <servlet>
         <servlet-name>client-page</servlet-name>
@@ -127,7 +138,7 @@
 
     <servlet-mapping>
         <servlet-name>add-admin</servlet-name>
-        <url-pattern>/add-admin</url-pattern>
+        <url-pattern>/super-admin-page/add-admin</url-pattern>
     </servlet-mapping>
 
     <!-- delete-admin servlet -->
@@ -138,7 +149,7 @@
 
     <servlet-mapping>
         <servlet-name>delete-admin</servlet-name>
-        <url-pattern>/delete-admin</url-pattern>
+        <url-pattern>/super-admin-page/delete-admin</url-pattern>
     </servlet-mapping>
 
     <!-- update-admin servlet -->
@@ -149,7 +160,7 @@
 
     <servlet-mapping>
         <servlet-name>update-admin</servlet-name>
-        <url-pattern>/update-admin</url-pattern>
+        <url-pattern>/super-admin-page/update-admin</url-pattern>
     </servlet-mapping>
 
     <!-- logout servlet -->

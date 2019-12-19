@@ -15,6 +15,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class RegisterServlet extends HttpServlet {
+    private ClientService clientService = new ClientService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/registration.jsp");
@@ -44,8 +46,7 @@ public class RegisterServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        ClientService service = new ClientService();
-        boolean isRegistered = service.addClient(client);
+        boolean isRegistered = clientService.addClient(client);
 
         if (isRegistered) {
             resp.sendRedirect("/login");

@@ -12,16 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UpdateAdminServlet extends HttpServlet {
+    AdminService adminService = new AdminService();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        long adminId = Long.parseLong(req.getParameter("adminId"));
-        AdminService service = new AdminService();
-        Admin admin = service.findAdminById(adminId);
+        try {
+            long adminId = Long.parseLong(req.getParameter("adminId"));
+            Admin admin = adminService.findAdminById(adminId);
 
-        req.getSession().setAttribute("admin", admin);
+            req.getSession().setAttribute("admin", admin);
 
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/update_admin.jsp");
-        requestDispatcher.forward(req, resp);
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/views/super-admin-page/update_admin.jsp");
+            requestDispatcher.forward(req, resp);
+        } catch (NumberFormatException e) {
+            resp.sendRedirect("/super-admin-page");
+        }
     }
 
     @Override
@@ -40,8 +45,7 @@ public class UpdateAdminServlet extends HttpServlet {
         admin.setEmail(email);
         admin.setPhoneNumber(phoneNumber);
 
-        AdminService service = new AdminService();
-        Admin updatedAdmin = service.updateAdmin(admin);
+        Admin updatedAdmin = adminService.updateAdmin(admin);
 
         if (updatedAdmin != null) {
             resp.sendRedirect("/super-admin-page");

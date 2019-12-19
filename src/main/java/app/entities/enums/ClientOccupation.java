@@ -23,6 +23,7 @@ public enum ClientOccupation {
                 return constant;
             }
         }
+
         return null;
     }
 }

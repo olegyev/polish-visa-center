@@ -10,15 +10,16 @@ import javax.sql.DataSource;
 
 public class ConnectionPool {
 
-    private ConnectionPool(){
+    private ConnectionPool() {
     }
 
     private static ConnectionPool instance = null;
 
-    public static ConnectionPool getInstance(){
+    public static ConnectionPool getInstance() {
         if (instance == null) {
             instance = new ConnectionPool();
         }
+
         return instance;
     }
 

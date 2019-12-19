@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Visa-D</title>
+    <title>Visa-C</title>
 </head>
 
 <body>
@@ -17,7 +17,7 @@
 </div>
 
 <div>
-    <h2>Documents required for Visa-D</h2>
+    <h2>Documents required for Visa-C</h2>
     <ul>
         <li>Filled form.</li>
         <li>Passport.</li>
@@ -31,7 +31,7 @@
 </div>
 
 <div>
-    <button onclick="location.href='/'">Back to main</button>
+    <button onclick="location.href='..'">Back to main</button>
 </div>
 </body>
 </html>
