@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class AdminFilter implements Filter {
+public class DirectorFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         HttpSession session = request.getSession();
@@ -20,12 +20,10 @@ public class AdminFilter implements Filter {
         if (adminData != null) {
             AdminPosition position = adminData.getPosition();
 
-            if (position.equals(AdminPosition.OPERATOR)) {
-                response.sendRedirect("/operator-page");
-            } else if (position.equals(AdminPosition.MANAGER)) {
-                response.sendRedirect("/manager-page");
-            } else if (position.equals(AdminPosition.DIRECTOR)) {
-                response.sendRedirect("/director-page");
+            if (position.equals(AdminPosition.DIRECTOR)) {
+                chain.doFilter(req, resp);
+            } else {
+                response.sendRedirect("/login");
             }
 
         } else {

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Visa extends Entity {
     private long id;
-    private long clientId;
+    private User client;
     private String visaNum;
     private VisaType visaType;
     private Date issueDate;
@@ -17,9 +17,8 @@ public class Visa extends Entity {
         super();
     }
 
-    public Visa(long id, long clientId, String visaNum, VisaType visaType, Date issueDate, Date expiryDate) {
-        this.id = id;
-        this.clientId = clientId;
+    public Visa(User client, String visaNum, VisaType visaType, Date issueDate, Date expiryDate) {
+        this.client = client;
         this.visaNum = visaNum;
         this.visaType = visaType;
         this.issueDate = issueDate;
@@ -34,12 +33,12 @@ public class Visa extends Entity {
         this.id = id;
     }
 
-    public long getClientId() {
-        return clientId;
+    public User getClient() {
+        return client;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public String getVisaNum() {
@@ -80,8 +79,8 @@ public class Visa extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         Visa that = (Visa) o;
         return getId() == that.getId() &&
-                getClientId() == that.getClientId() &&
                 getVisaType() == that.getVisaType() &&
+                Objects.equals(getClient(), that.getClient()) &&
                 Objects.equals(getVisaNum(), that.getVisaNum()) &&
                 Objects.equals(getIssueDate(), that.getIssueDate()) &&
                 Objects.equals(getExpiryDate(), that.getExpiryDate());
@@ -89,14 +88,14 @@ public class Visa extends Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getClientId(), getVisaNum(), getVisaType(), getIssueDate(), getExpiryDate());
+        return Objects.hash(getId(), getClient(), getVisaNum(), getVisaType(), getIssueDate(), getExpiryDate());
     }
 
     @Override
     public String toString() {
         return "Visa{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", visaNum='" + visaNum + '\'' +
                 ", visaType=" + visaType +
                 ", issueDate=" + issueDate +

@@ -1,19 +1,22 @@
 package app.entities;
 
 import app.entities.enums.AdminPosition;
+import app.entities.enums.City;
 
 import java.util.Objects;
 
 public class Admin extends User {
     private AdminPosition position;
+    private City city;
 
     public Admin() {
         super();
     }
 
-    public Admin(String firstName, String lastName, AdminPosition position, String email, String phoneNumber, String password) {
+    public Admin(String firstName, String lastName, AdminPosition position, City city, String email, String phoneNumber, String password) {
         super(firstName, lastName, email, phoneNumber, password);
         this.position = position;
+        this.city = city;
     }
 
     public AdminPosition getPosition() {
@@ -22,6 +25,14 @@ public class Admin extends User {
 
     public void setPosition(AdminPosition position) {
         this.position = position;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 
     @Override
@@ -33,6 +44,7 @@ public class Admin extends User {
                 Objects.equals(getFirstName(), that.getFirstName()) &&
                 Objects.equals(getLastName(), that.getLastName()) &&
                 Objects.equals(getPosition(), that.getPosition()) &&
+                Objects.equals(getCity(), that.getCity()) &&
                 Objects.equals(getEmail(), that.getEmail()) &&
                 Objects.equals(getPhoneNumber(), that.getPhoneNumber()) &&
                 Objects.equals(getPassword(), that.getPassword());
@@ -40,7 +52,7 @@ public class Admin extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getPosition(), getEmail(),
+        return Objects.hash(getId(), getFirstName(), getLastName(), getPosition(), getCity(), getEmail(),
                 getPhoneNumber(), getPassword());
     }
 
@@ -51,6 +63,7 @@ public class Admin extends User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", position='" + position + '\'' +
+                ", city='" + city + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", password='" + password + '\'' +

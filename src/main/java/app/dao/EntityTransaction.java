@@ -37,14 +37,11 @@ public class EntityTransaction {
                 e.printStackTrace();
             }
         }
+        connection = null;
     }
 
-    public void commit() {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void commit() throws SQLException {
+        connection.commit();
     }
 
     public void rollback() {

@@ -1,32 +1,31 @@
 <%--
   Created by IntelliJ IDEA.
   User: User
-  Date: 02.12.2019
-  Time: 17:13
+  Date: 11.12.2019
+  Time: 13:29
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="app.entities.enums.ClientOccupation" %>
 
 <html>
 <head>
-    <title>Registration</title>
+    <title>Add operator</title>
 </head>
 
 <body>
 <div>
-    <h1>Poland Visa Center</h1>
+    <h1>Add operator</h1>
 </div>
 
 <div>
     <div>
-        <h2><c:out value="${register_error}" /></h2>
+        <h2><c:out value="${add_operator_error}" /></h2>
     </div>
 
     <div>
-        <h2>Please fill all fields as in passport<br />
-        (in case of success you will be redirected to the login page)</h2>
+        <h2>Please fill all fields<br />
+            (in case of success you will be redirected to your menu page)</h2>
     </div>
 
     <form method="post">
@@ -49,36 +48,18 @@
                 </td>
             </tr>
             <tr>
-                <td>Date of birth:</td>
+                <td>Position:</td>
                 <td>
                     <label>
-                        <input type="date" name="date_of_birth" id="date" min="1900-01-01" max="today" required><br />
+                        <input type="text" name="position" value="Operator" readonly><br />
                     </label>
-                    <script>
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth() + 1; // January is 0.
-                        var yyyy = today.getFullYear();
-                        if (dd < 10) {
-                            dd = '0' + dd;
-                        }
-                        if (mm < 10) {
-                            mm = '0' + mm;
-                        }
-                        today = yyyy + '-' + mm + '-' + dd;
-                        document.getElementById("date").setAttribute("max", today);
-                    </script>
                 </td>
             </tr>
             <tr>
-                <td>Occupation:</td>
+                <td>City:</td>
                 <td>
                     <label>
-                        <select class="selectpicker" name="occupation">
-                            <c:forEach items="<%=ClientOccupation.values()%>" var="occupation">
-                                <option value="${occupation}">${occupation.getTitle()}</option>
-                            </c:forEach>
-                        </select><br />
+                        <input type="text" name="city" value="${city}" readonly><br />
                     </label>
                 </td>
             </tr>
@@ -116,14 +97,6 @@
                     </label>
                 </td>
             </tr>
-            <tr>
-                <td>I agree to the processing of personal data:</td>
-                <td>
-                    <label>
-                        <input type="checkbox" name="personal_data_agree" required><br />
-                    </label>
-                </td>
-            </tr>
             </tbody>
         </table>
 
@@ -142,7 +115,7 @@
 </div>
 
 <div>
-    <button onclick="location.href='/login'">Back to previous page</button><br />
+    <button onclick="location.href='/manager-page'">Back to previous page</button><br />
 </div>
 
 <div>

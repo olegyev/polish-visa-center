@@ -7,10 +7,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminPageServlet extends HttpServlet {
+public class ErrorHandler extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/admin_page.jsp");
+        Integer errorCode = (Integer) req.getAttribute("javax.servlet.error.status_code");
+        String errorUri = (String) req.getAttribute("javax.servlet.error.request_uri");
+
+        req.setAttribute("error_code", errorCode);
+        req.setAttribute("error_uri", errorUri);
+
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/errors/error.jsp");
         requestDispatcher.forward(req, resp);
     }
 }

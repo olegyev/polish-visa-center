@@ -1,22 +1,23 @@
 package app.entities;
 
+import app.entities.enums.City;
+
 import java.util.Date;
 import java.util.Objects;
 
 public class Appointment extends Entity {
     private long id;
-    private long clientId;
+    private User client;
+    private City city;
     private Date appointmentDate;
-    private long appointmentTime;
-    private String city;
+    private String appointmentTime;
 
     public Appointment() {
         super();
     }
 
-    public Appointment(long id, long clientId, String city, Date appointmentDate, long appointmentTime) {
-        this.id = id;
-        this.clientId = clientId;
+    public Appointment(User client, City city, Date appointmentDate, String appointmentTime) {
+        this.client = client;
         this.appointmentDate = appointmentDate;
         this.appointmentTime = appointmentTime;
         this.city = city;
@@ -30,14 +31,21 @@ public class Appointment extends Entity {
         this.id = id;
     }
 
-    public long getClientId() {
-        return clientId;
+    public User getClient() {
+        return client;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
 
     public Date getAppointmentDate() {
         return appointmentDate;
@@ -47,20 +55,12 @@ public class Appointment extends Entity {
         this.appointmentDate = appointmentDate;
     }
 
-    public long getAppointmentTime() {
+    public String getAppointmentTime() {
         return appointmentTime;
     }
 
-    public void setAppointmentTime(long appointmentTime) {
+    public void setAppointmentTime(String appointmentTime) {
         this.appointmentTime = appointmentTime;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     @Override
@@ -69,25 +69,25 @@ public class Appointment extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
         return getId() == that.getId() &&
-                getClientId() == that.getClientId() &&
-                getAppointmentTime() == that.getAppointmentTime() &&
+                Objects.equals(getClient(), that.getClient()) &&
+                Objects.equals(getCity(), that.getCity()) &&
                 Objects.equals(getAppointmentDate(), that.getAppointmentDate()) &&
-                Objects.equals(getCity(), that.getCity());
+                Objects.equals(getAppointmentTime(), that.getAppointmentTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getClientId(), getAppointmentDate(), getAppointmentTime(),  getCity());
+        return Objects.hash(getId(), getClient(), getCity(), getAppointmentDate(), getAppointmentTime());
     }
 
     @Override
     public String toString() {
         return "Appointment{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", client=" + client +
+                ", city='" + city + '\'' +
                 ", appointmentDate=" + appointmentDate +
                 ", appointmentTime=" + appointmentTime +
-                ", city='" + city + '\'' +
                 '}';
     }
 }

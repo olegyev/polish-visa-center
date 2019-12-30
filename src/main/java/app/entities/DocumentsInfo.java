@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class DocumentsInfo extends Entity {
     private long id;
-    private long clientId;
+    private User client;
     private char requiredVisaType;
     private String passportNum;
     private String visaApplicationForm;
@@ -24,12 +24,11 @@ public class DocumentsInfo extends Entity {
         super();
     }
 
-    public DocumentsInfo(long id, long clientId, char requiredVisaType, String passportNum, String visaApplicationForm,
+    public DocumentsInfo(User client, char requiredVisaType, String passportNum, String visaApplicationForm,
                      boolean isPhotoAttached, boolean isPassportCopyAttached, boolean isPrevVisasCopyAttached,
                      String medInsurance, String returnTicket, String employCertificate, String financialMeansConfirm,
                      String residencePermit, String minorsDocs, String tripAimProof, String polishOriginCertificate) {
-        this.id = id;
-        this.clientId = clientId;
+        this.client = client;
         this.requiredVisaType = requiredVisaType;
         this.passportNum = passportNum;
         this.visaApplicationForm = visaApplicationForm;
@@ -54,12 +53,12 @@ public class DocumentsInfo extends Entity {
         this.id = id;
     }
 
-    public long getClientId() {
-        return clientId;
+    public User getClient() {
+        return client;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public char getRequiredVisaType() {
@@ -180,11 +179,11 @@ public class DocumentsInfo extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         DocumentsInfo that = (DocumentsInfo) o;
         return getId() == that.getId() &&
-                getClientId() == that.getClientId() &&
                 getRequiredVisaType() == that.getRequiredVisaType() &&
                 isPhotoAttached() == that.isPhotoAttached() &&
                 isPassportCopyAttached() == that.isPassportCopyAttached() &&
                 isPrevVisasCopyAttached() == that.isPrevVisasCopyAttached() &&
+                Objects.equals(getClient(), that.getClient()) &&
                 Objects.equals(getPassportNum(), that.getPassportNum()) &&
                 Objects.equals(getVisaApplicationForm(), that.getVisaApplicationForm()) &&
                 Objects.equals(getMedInsurance(), that.getMedInsurance()) &&
@@ -199,7 +198,7 @@ public class DocumentsInfo extends Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getClientId(), getRequiredVisaType(), getPassportNum(), getVisaApplicationForm(),
+        return Objects.hash(getId(), getClient(), getRequiredVisaType(), getPassportNum(), getVisaApplicationForm(),
                 isPhotoAttached(), isPassportCopyAttached(), isPrevVisasCopyAttached(), getMedInsurance(),
                 getReturnTicket(), getEmployCertificate(), getFinancialMeansConfirm(), getResidencePermit(),
                 getMinorsDocs(), getTripAimProof(), getPolishOriginCertificate());
@@ -209,7 +208,7 @@ public class DocumentsInfo extends Entity {
     public String toString() {
         return "DocumentsInfo{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", requiredVisaType=" + requiredVisaType +
                 ", passportNum='" + passportNum + '\'' +
                 ", visaApplicationForm='" + visaApplicationForm + '\'' +

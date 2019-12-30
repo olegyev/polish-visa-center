@@ -3,116 +3,209 @@ package app.services;
 import app.dao.AdminDao;
 import app.dao.EntityTransaction;
 import app.entities.Admin;
+import app.entities.enums.AdminPosition;
+import app.entities.enums.City;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminService {
     private AdminDao dao = new AdminDao();
+    private EntityTransaction transaction = new EntityTransaction();
 
     public boolean addAdmin(Admin admin) {
-        EntityTransaction transaction = new EntityTransaction();
+        boolean isAdded = false;
         transaction.begin(dao);
 
-        boolean isAdded = false;
-        if (admin != null && !isInDataBase(admin, dao)) {
-            isAdded = dao.create(admin);
+        try {
+            if (admin != null && !isInDataBase(admin)) {
+                isAdded = dao.create(admin);
+            }
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
         }
-
-        transaction.commit();
-        transaction.end();
 
         return isAdded;
     }
 
     public Admin login(String email, String password) {
-        EntityTransaction transaction = new EntityTransaction();
+        Admin admin = null;
         transaction.begin(dao);
 
-        Admin admin = dao.authenticate(email, password);
-
-        transaction.commit();
-        transaction.end();
+        try {
+            admin = dao.authenticate(email, password);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
         return admin;
     }
 
     public List<Admin> findAllAdmins() {
-        EntityTransaction transaction = new EntityTransaction();
+        List<Admin> admins = new ArrayList<Admin>();
         transaction.begin(dao);
 
-        List<Admin> admins = dao.readAll();
-
-        transaction.commit();
-        transaction.end();
+        try {
+            admins = dao.readAll();
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
         return admins;
     }
 
     public Admin findAdminById(long id) {
-        EntityTransaction transaction = new EntityTransaction();
+        Admin admin = null;
         transaction.begin(dao);
 
-        Admin admin = dao.readById(id);
-
-        transaction.commit();
-        transaction.end();
+        try {
+            admin = dao.readById(id);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
         return admin;
     }
 
     public Admin findAdminByEmail(String email) {
-        EntityTransaction transaction = new EntityTransaction();
+        Admin admin = null;
         transaction.begin(dao);
 
-        Admin admin = dao.readByEmail(email);
-
-        transaction.commit();
-        transaction.end();
+        try {
+            admin = dao.readByEmail(email);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
         return admin;
     }
 
     public List<Admin> findAdminByLastName(String lastName) {
-        EntityTransaction transaction = new EntityTransaction();
+        List<Admin> admins = new ArrayList<Admin>();
         transaction.begin(dao);
 
-        List<Admin> admin = dao.readByLastName(lastName);
+        try {
+            admins = dao.readByLastName(lastName);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
-        transaction.commit();
-        transaction.end();
-
-        return admin;
+        return admins;
     }
 
-    public boolean deleteAdmin(long id) {
-        EntityTransaction transaction = new EntityTransaction();
+    public List<Admin> findAdminsByCity(City city) {
+        List<Admin> admins = new ArrayList<Admin>();
         transaction.begin(dao);
 
-        boolean isDeleted = dao.deleteById(id);
+        try {
+            admins = dao.readByCity(city);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
 
-        transaction.commit();
-        transaction.end();
+        return admins;
+    }
 
-        return isDeleted;
+    public List<Admin> findAdminsByPositionAndCity(AdminPosition position, City city) {
+        List<Admin> admins = new ArrayList<Admin>();
+        transaction.begin(dao);
+
+        try {
+            admins = dao.readByPositionAndCity(position, city);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
+
+        return admins;
+    }
+
+    public int countAdminsByCityAndPosition(City city, AdminPosition position) {
+        int result = 0;
+        transaction.begin(dao);
+
+        try {
+            result = dao.countAdminsByCityAndPosition(city, position);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
+
+        return result;
     }
 
     public Admin updateAdmin(Admin admin) {
-        EntityTransaction transaction = new EntityTransaction();
+        Admin updatedAdmin = null;
         transaction.begin(dao);
 
-        Admin updatedAdmin = null;
-
-        if (admin != null && !isInDataBase(admin, dao)) {
-            updatedAdmin = dao.update(admin);
+        try {
+            if (admin != null && !isInDataBase(admin)) {
+                updatedAdmin = dao.update(admin);
+            }
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
         }
-
-        transaction.commit();
-        transaction.end();
 
         return updatedAdmin;
     }
 
-    private boolean isInDataBase(Admin admin, AdminDao dao) {
+    public boolean deleteAdmin(long id) {
+        boolean isDeleted = false;
+        transaction.begin(dao);
+
+        try {
+            isDeleted = dao.deleteById(id);
+            transaction.commit();
+        } catch (SQLException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            transaction.end();
+        }
+
+        return isDeleted;
+    }
+
+    private boolean isInDataBase(Admin admin) {
         boolean isInDataBase = false;
         Admin adminInDataBase = dao.readByEmail(admin.getEmail());
 

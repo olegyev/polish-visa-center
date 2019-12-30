@@ -43,15 +43,8 @@ public class LoginServlet extends HttpServlet {
                 Admin admin = adminService.login(email, password);
 
                 if (admin != null) {
-                    AdminPosition position = admin.getPosition();
                     req.getSession().setAttribute("admin_data", admin);
-
-                    if (position.equals(AdminPosition.OPERATOR)) {
-                        resp.sendRedirect("/admin-page");
-                    } else if (position.equals(AdminPosition.MANAGER)) {
-                        resp.sendRedirect("/super-admin-page");
-                    }
-
+                    resp.sendRedirect("/admin-page");
                 } else {
                     req.setAttribute("login_error", "Invalid login! Try again or register!");
                     doGet(req, resp);

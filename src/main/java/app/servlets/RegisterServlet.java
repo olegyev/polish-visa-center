@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RegisterServlet extends HttpServlet {
     private ClientService clientService = new ClientService();
@@ -27,26 +28,32 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String firstName = req.getParameter("first_name").trim().toUpperCase();
         String lastName = req.getParameter("last_name").trim().toUpperCase();
-        String dateOfBirth = req.getParameter("date_of_birth");
+        Date dateOfBirth = null;
+        try {
+            dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(req.getParameter("date_of_birth"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         ClientOccupation occupation = ClientOccupation.valueOf(req.getParameter("occupation"));
         String email = req.getParameter("email").trim();
         String phoneNumber = req.getParameter("phone_number").trim();
         String password = PasswordEncryptor.encryptWithMd5(req.getParameter("password"));
-        String persDataAgree = req.getParameter("pers_data_agree");
+        String personalDataAgree = req.getParameter("personal_data_agree");
         boolean isAgree = false;
 
-        if (persDataAgree != null) {
+        if (personalDataAgree != null) {
             isAgree = true;
         }
 
         Client client = null;
-        try {
-            client = new Client(firstName, lastName, new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth), occupation, email, phoneNumber, password, isAgree);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (dateOfBirth != null) {
+            client = new Client(firstName, lastName, dateOfBirth, occupation, email, phoneNumber, password, isAgree);
         }
 
-        boolean isRegistered = clientService.addClient(client);
+        boolean isRegistered = false;
+        if (client != null) {
+            isRegistered = clientService.addClient(client);
+        }
 
         if (isRegistered) {
             resp.sendRedirect("/login");

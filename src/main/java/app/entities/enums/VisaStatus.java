@@ -1,11 +1,11 @@
 package app.entities.enums;
 
 public enum VisaStatus {
-    INCOMPLETE_DOCS ("Incomplete set of documents"),
+    DOCS_RECEIVED ("Documents received from client"),
     PENDING ("Documents are pending at the embassy"),
     CONFIRMED ("Visa confirmed"),
-    ISSUED ("Passport with visa issued to the client"),
-    DENIED ("Visa denied");
+    DENIED ("Visa denied"),
+    ISSUED ("Passport with visa issued to the client");
 
     private String title;
 

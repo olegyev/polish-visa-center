@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class PaymentStatus extends Entity {
     private long id;
-    private long clientId;
+    private User client;
     private boolean visaFee;
     private boolean serviceFee;
 
@@ -12,9 +12,8 @@ public class PaymentStatus extends Entity {
         super();
     }
 
-    public PaymentStatus(long id, long clientId, boolean visaFee, boolean serviceFee) {
-        this.id = id;
-        this.clientId = clientId;
+    public PaymentStatus(User client, boolean visaFee, boolean serviceFee) {
+        this.client = client;
         this.visaFee = visaFee;
         this.serviceFee = serviceFee;
     }
@@ -27,12 +26,12 @@ public class PaymentStatus extends Entity {
         this.id = id;
     }
 
-    public long getClientId() {
-        return clientId;
+    public User getClient() {
+        return client;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public boolean isVisaFee() {
@@ -57,21 +56,21 @@ public class PaymentStatus extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         PaymentStatus that = (PaymentStatus) o;
         return getId() == that.getId() &&
-                getClientId() == that.getClientId() &&
                 isVisaFee() == that.isVisaFee() &&
-                isServiceFee() == that.isServiceFee();
+                isServiceFee() == that.isServiceFee() &&
+                Objects.equals(getClient(), that.getClient());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getClientId(), isVisaFee(), isServiceFee());
+        return Objects.hash(getId(), getClient(), isVisaFee(), isServiceFee());
     }
 
     @Override
     public String toString() {
         return "PaymentStatus{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", visaFee=" + visaFee +
                 ", serviceFee=" + serviceFee +
                 '}';

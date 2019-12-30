@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class SuperAdminFilter implements Filter {
+public class OperatorFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -20,7 +20,7 @@ public class SuperAdminFilter implements Filter {
         if (adminData != null) {
             AdminPosition position = adminData.getPosition();
 
-            if (position.equals(AdminPosition.MANAGER)) {
+            if (position.equals(AdminPosition.OPERATOR)) {
                 chain.doFilter(req, resp);
             } else {
                 response.sendRedirect("/login");

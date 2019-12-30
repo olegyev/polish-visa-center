@@ -75,6 +75,17 @@
         <url-pattern>/client-page/*</url-pattern>
     </filter-mapping>
 
+    <!-- book-appointment filter -->
+    <filter>
+        <filter-name>book-appointment-filter</filter-name>
+        <filter-class>app.servlets.filters.BookAppointmentFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>book-appointment-filter</filter-name>
+        <url-pattern>/book-appointment</url-pattern>
+    </filter-mapping>
+
     <!-- admin filter -->
     <filter>
         <filter-name>admin-filter</filter-name>
@@ -83,18 +94,40 @@
 
     <filter-mapping>
         <filter-name>admin-filter</filter-name>
-        <url-pattern>/admin-page/*</url-pattern>
+        <url-pattern>/admin-page</url-pattern>
     </filter-mapping>
 
-    <!-- super-admin filter -->
+    <!-- operator filter -->
     <filter>
-        <filter-name>super-admin-filter</filter-name>
-        <filter-class>app.servlets.filters.SuperAdminFilter</filter-class>
+        <filter-name>operator-filter</filter-name>
+        <filter-class>app.servlets.filters.OperatorFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>super-admin-filter</filter-name>
-        <url-pattern>/super-admin-page/*</url-pattern>
+        <filter-name>operator-filter</filter-name>
+        <url-pattern>/operator-page/*</url-pattern>
+    </filter-mapping>
+
+    <!-- manager filter -->
+    <filter>
+        <filter-name>manager-filter</filter-name>
+        <filter-class>app.servlets.filters.ManagerFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>manager-filter</filter-name>
+        <url-pattern>/manager-page/*</url-pattern>
+    </filter-mapping>
+
+    <!-- director filter -->
+    <filter>
+        <filter-name>director-filter</filter-name>
+        <filter-class>app.servlets.filters.DirectorFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>director-filter</filter-name>
+        <url-pattern>/director-page/*</url-pattern>
     </filter-mapping>
 
     <!-- client-page servlet -->
@@ -108,59 +141,114 @@
         <url-pattern>/client-page</url-pattern>
     </servlet-mapping>
 
-    <!-- admin-page servlet -->
+    <!-- book-appointment servlet -->
     <servlet>
-        <servlet-name>admin-page</servlet-name>
-        <servlet-class>app.servlets.AdminPageServlet</servlet-class>
+        <servlet-name>book-appointment</servlet-name>
+        <servlet-class>app.servlets.BookAppointmentServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>admin-page</servlet-name>
-        <url-pattern>/admin-page</url-pattern>
+        <servlet-name>book-appointment</servlet-name>
+        <url-pattern>/book-appointment</url-pattern>
     </servlet-mapping>
 
-    <!-- super-admin-page servlet -->
+    <!-- operator-page servlet -->
     <servlet>
-        <servlet-name>super-admin-page</servlet-name>
-        <servlet-class>app.servlets.SuperAdminPageServlet</servlet-class>
+        <servlet-name>operator-page</servlet-name>
+        <servlet-class>app.servlets.OperatorPageServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>super-admin-page</servlet-name>
-        <url-pattern>/super-admin-page</url-pattern>
+        <servlet-name>operator-page</servlet-name>
+        <url-pattern>/operator-page</url-pattern>
     </servlet-mapping>
 
-    <!-- add-admin servlet -->
+    <!-- manager-page servlet -->
     <servlet>
-        <servlet-name>add-admin</servlet-name>
-        <servlet-class>app.servlets.AddAdminServlet</servlet-class>
+        <servlet-name>manager-page</servlet-name>
+        <servlet-class>app.servlets.ManagerPageServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>add-admin</servlet-name>
-        <url-pattern>/super-admin-page/add-admin</url-pattern>
+        <servlet-name>manager-page</servlet-name>
+        <url-pattern>/manager-page</url-pattern>
     </servlet-mapping>
 
-    <!-- delete-admin servlet -->
+    <!-- director-page servlet -->
     <servlet>
-        <servlet-name>delete-admin</servlet-name>
-        <servlet-class>app.servlets.DeleteAdminServlet</servlet-class>
+        <servlet-name>director-page</servlet-name>
+        <servlet-class>app.servlets.DirectorPageServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>delete-admin</servlet-name>
-        <url-pattern>/super-admin-page/delete-admin</url-pattern>
+        <servlet-name>director-page</servlet-name>
+        <url-pattern>/director-page</url-pattern>
     </servlet-mapping>
 
-    <!-- update-admin servlet -->
+    <!-- add-operator servlet -->
     <servlet>
-        <servlet-name>update-admin</servlet-name>
-        <servlet-class>app.servlets.UpdateAdminServlet</servlet-class>
+        <servlet-name>add-operator</servlet-name>
+        <servlet-class>app.servlets.AddOperatorServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>update-admin</servlet-name>
-        <url-pattern>/super-admin-page/update-admin</url-pattern>
+        <servlet-name>add-operator</servlet-name>
+        <url-pattern>/manager-page/add-operator</url-pattern>
+    </servlet-mapping>
+
+    <!-- update-operator servlet -->
+    <servlet>
+        <servlet-name>update-operator</servlet-name>
+        <servlet-class>app.servlets.UpdateOperatorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>update-operator</servlet-name>
+        <url-pattern>/manager-page/update-operator</url-pattern>
+    </servlet-mapping>
+
+    <!-- delete-operator servlet -->
+    <servlet>
+        <servlet-name>delete-operator</servlet-name>
+        <servlet-class>app.servlets.DeleteOperatorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>delete-operator</servlet-name>
+        <url-pattern>/manager-page/delete-operator</url-pattern>
+    </servlet-mapping>
+
+    <!-- add-employee servlet -->
+    <servlet>
+        <servlet-name>add-employee</servlet-name>
+        <servlet-class>app.servlets.AddEmployeeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>add-employee</servlet-name>
+        <url-pattern>/director-page/add-employee</url-pattern>
+    </servlet-mapping>
+
+    <!-- delete-employee servlet -->
+    <servlet>
+        <servlet-name>delete-employee</servlet-name>
+        <servlet-class>app.servlets.DeleteEmployeeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>delete-employee</servlet-name>
+        <url-pattern>/director-page/delete-employee</url-pattern>
+    </servlet-mapping>
+
+    <!-- update-employee servlet -->
+    <servlet>
+        <servlet-name>update-employee</servlet-name>
+        <servlet-class>app.servlets.UpdateEmployeeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>update-employee</servlet-name>
+        <url-pattern>/director-page/update-employee</url-pattern>
     </servlet-mapping>
 
     <!-- logout servlet -->
@@ -173,6 +261,21 @@
         <servlet-name>logout</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+
+    <!-- error-handler servlet -->
+    <servlet>
+        <servlet-name>error-handler</servlet-name>
+        <servlet-class>app.servlets.ErrorHandler</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>error-handler</servlet-name>
+        <url-pattern>/error-handler</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <location>/error-handler</location>
+    </error-page>
 
     <!-- DB connection -->
     <resource-ref>

@@ -1,13 +1,15 @@
 package app.entities.enums;
 
-public enum AdminPosition {
-    OPERATOR ("Operator"),
-    MANAGER ("Manager"),
-    DIRECTOR ("Director");
+public enum City {
+    MINSK ("Minsk"),
+    GOMEL ("Gomel"),
+    MOGILEV ("Mogilev"),
+    BREST ("Brest"),
+    GRODNO ("Grodno");
 
     private String title;
 
-    AdminPosition(String title) {
+    City(String title) {
         this.title = title;
     }
 
@@ -15,8 +17,8 @@ public enum AdminPosition {
         return title;
     }
 
-    public static AdminPosition findByTitle(String title){
-        for (AdminPosition constant : values()){
+    public static City findByTitle(String title){
+        for (City constant : values()){
             if (title.equals(constant.getTitle())){
                 return constant;
             }

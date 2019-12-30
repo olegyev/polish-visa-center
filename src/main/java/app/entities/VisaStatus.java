@@ -4,16 +4,15 @@ import java.util.Objects;
 
 public class VisaStatus extends Entity {
     private long id;
-    private long clientId;
+    private User client;
     private VisaStatus status;
 
     public VisaStatus() {
         super();
     }
 
-    public VisaStatus(long id, long clientId, VisaStatus status) {
-        this.id = id;
-        this.clientId = clientId;
+    public VisaStatus(User client, VisaStatus status) {
+        this.client = client;
         this.status = status;
     }
 
@@ -25,12 +24,12 @@ public class VisaStatus extends Entity {
         this.id = id;
     }
 
-    public long getClientId() {
-        return clientId;
+    public User getClient() {
+        return client;
     }
 
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
+    public void setClient(User client) {
+        this.client = client;
     }
 
     public VisaStatus getStatus() {
@@ -47,20 +46,20 @@ public class VisaStatus extends Entity {
         if (o == null || getClass() != o.getClass()) return false;
         VisaStatus that = (VisaStatus) o;
         return getId() == that.getId() &&
-                getClientId() == that.getClientId() &&
+                Objects.equals(getClient(), that.getClient()) &&
                 Objects.equals(getStatus(), that.getStatus());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getClientId(), getStatus());
+        return Objects.hash(getId(), getClient(), getStatus());
     }
 
     @Override
     public String toString() {
         return "VisaStatus{" +
                 "id=" + id +
-                ", clientId=" + clientId +
+                ", client=" + client +
                 ", status='" + status + '\'' +
                 '}';
     }

@@ -14,7 +14,7 @@ public class ClientDao extends UserDao<Client> {
     private static final String READ_ALL_CLIENTS = "SELECT * FROM clients";
     private static final String READ_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
     private static final String READ_CLIENT_BY_EMAIL = "SELECT * FROM clients WHERE email = ?";
-    private static final String READ_CLIENT_BY_LAST_NAME = "SELECT * FROM clients WHERE last_name = ?";
+    private static final String READ_CLIENTS_BY_LAST_NAME = "SELECT * FROM clients WHERE last_name = ?";
     private static final String GET_ID_BY_EMAIL = "SELECT id FROM clients WHERE email = ?";
     private static final String UPDATE_CLIENT = "UPDATE clients SET first_name = ?, last_name = ?, date_of_birth = ?, " +
             "occupation = ?, email = ?, phone_number = ? WHERE id = ?";
@@ -129,7 +129,7 @@ public class ClientDao extends UserDao<Client> {
         List<Client> clients = new ArrayList<Client>();
         Client client = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(READ_CLIENT_BY_LAST_NAME)) {
+        try (PreparedStatement statement = connection.prepareStatement(READ_CLIENTS_BY_LAST_NAME)) {
             statement.setString(1, lastName.trim().toUpperCase());
             ResultSet resultSet = statement.executeQuery();
 
@@ -208,7 +208,7 @@ public class ClientDao extends UserDao<Client> {
     public boolean deleteById(long id) {
         int rowAffected = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID);) {
+        try (PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID)) {
             statement.setLong(1, id);
             rowAffected = statement.executeUpdate();
         } catch (SQLException e) {

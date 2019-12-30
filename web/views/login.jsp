@@ -7,9 +7,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Login</title>
+
     <style type="text/css">
         A {
             color: blue;
@@ -46,7 +48,7 @@
                 <td>E-Mail:</td>
                 <td>
                     <label>
-                        <input type="email" name="email" placeholder="address@domain.com" required><br />
+                        <input type="email" name="email" placeholder="address@domain.com" maxlength="255" required><br />
                     </label>
                 </td>
             </tr>
@@ -54,7 +56,7 @@
                 <td>Password:</td>
                 <td>
                     <label>
-                        <input type="password" name="password" required><br />
+                        <input type="password" name="password" maxlength="255" required><br />
                     </label>
                 </td>
             </tr>
