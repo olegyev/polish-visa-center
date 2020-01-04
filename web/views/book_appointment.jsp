@@ -179,7 +179,7 @@
 
             function disableHolidays(dates) {
                 var result = dates;
-                var holidays = ["1-1", "3-8", "5-9", "7-3", "11-7", "12-25", "12-31"];
+                var holidays = ["1-1", "1-7", "3-8", "5-9", "7-3", "11-7", "12-25", "12-31"];
 
                 for (var i = 0; i < holidays.length; i++) {
                     result.push(holidays[i]);

@@ -95,7 +95,7 @@
                             <td><c:out value="${appointment.getClient().getOccupation().getTitle()}" /></td>
                             <c:choose>
                                 <c:when test="${appointment.getCity().equals(operator.getCity())}">
-                                    <td><a href="operator-page/set-visa-status?employeeId=<c:out value="${employee.getId()}" />">Set visa status</a></td>
+                                    <td><a href="operator-page/set-visa-status?clientId=<c:out value="${appointment.getClient().getId()}" />">Set visa status</a></td>
                                 </c:when>
                                 <c:when test="${!appointment.getCity().equals(operator.getCity())}">
                                     <td>Denied</td>

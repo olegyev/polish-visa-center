@@ -2,7 +2,6 @@ package app.servlets;
 
 import app.entities.Appointment;
 import app.entities.Client;
-import app.entities.User;
 import app.entities.enums.City;
 import app.services.AppointmentService;
 
@@ -65,7 +64,7 @@ public class BookAppointmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User client = (Client) session.getAttribute("client_data");
+        Client client = (Client) session.getAttribute("client_data");
 
         City city = City.valueOf(req.getParameter("city"));
         Date date = null;
