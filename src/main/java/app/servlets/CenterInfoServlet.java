@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import javax.servlet.RequestDispatcher;
@@ -13,4 +14,4 @@ public class CenterInfoServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/center_info.jsp");
         requestDispatcher.forward(req, resp);
     }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package app.util;
 
 import java.net.URI;
@@ -16,4 +17,4 @@ public class UriManager {
 
         return new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(), newQuery, oldUri.getFragment());
     }
-}
+}*/

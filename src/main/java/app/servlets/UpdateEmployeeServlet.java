@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Admin;
@@ -64,4 +65,4 @@ public class UpdateEmployeeServlet extends HttpServlet {
             doGet(req, resp);
         }
     }
-}
+}*/

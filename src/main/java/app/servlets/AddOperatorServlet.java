@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Admin;
@@ -52,4 +53,4 @@ public class AddOperatorServlet extends HttpServlet {
             doGet(req, resp);
         }
     }
-}
+}*/

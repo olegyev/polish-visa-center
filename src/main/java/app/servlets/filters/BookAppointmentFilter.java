@@ -1,3 +1,4 @@
+/*
 package app.servlets.filters;
 
 import app.entities.Client;
@@ -26,4 +27,4 @@ public class BookAppointmentFilter implements Filter {
             response.sendRedirect("/login");
         }
     }
-}
+}*/

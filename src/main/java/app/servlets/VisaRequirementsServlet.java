@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import javax.servlet.RequestDispatcher;
@@ -24,4 +25,4 @@ public class VisaRequirementsServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
         }
     }
-}
+}*/

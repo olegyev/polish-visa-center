@@ -1,3 +1,4 @@
+/*
 package app.servlets.filters;
 
 import app.entities.Admin;
@@ -32,4 +33,4 @@ public class AdminFilter implements Filter {
             response.sendRedirect("/login");
         }
     }
-}
+}*/

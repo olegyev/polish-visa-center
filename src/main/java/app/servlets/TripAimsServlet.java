@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import javax.servlet.RequestDispatcher;
@@ -13,4 +14,4 @@ public class TripAimsServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/trip_aims.jsp");
         requestDispatcher.forward(req, resp);
     }
-}
+}*/

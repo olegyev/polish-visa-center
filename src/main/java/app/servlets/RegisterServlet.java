@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Client;
@@ -47,7 +48,7 @@ public class RegisterServlet extends HttpServlet {
 
         Client client = null;
         if (dateOfBirth != null) {
-            client = new Client(firstName, lastName, dateOfBirth, occupation, email, phoneNumber, password, isAgree);
+            // client = new Client(firstName, lastName, dateOfBirth, occupation, email, phoneNumber, password, isAgree);
         }
 
         boolean isRegistered = false;
@@ -62,4 +63,4 @@ public class RegisterServlet extends HttpServlet {
             doGet(req, resp);
         }
     }
-}
+}*/

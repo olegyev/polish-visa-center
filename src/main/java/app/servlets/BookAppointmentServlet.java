@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Appointment;
@@ -93,7 +94,7 @@ public class BookAppointmentServlet extends HttpServlet {
             }
         } else {
             if (appointment != null) {
-                appointment.setId(appointmentInDb.getId());
+                // appointment.setId(appointmentInDb.getId());
                 updatedAppointment = appointmentService.updateAppointment(appointment);
             }
         }
@@ -102,4 +103,4 @@ public class BookAppointmentServlet extends HttpServlet {
             resp.sendRedirect("/client-page");
         }
     }
-}
+}*/

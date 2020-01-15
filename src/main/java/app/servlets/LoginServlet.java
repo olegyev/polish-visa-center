@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Admin;
@@ -68,4 +69,4 @@ public class LoginServlet extends HttpServlet {
             doPost(req, resp);
         }
     }
-}
+}*/

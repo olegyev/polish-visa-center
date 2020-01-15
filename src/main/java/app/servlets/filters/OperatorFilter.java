@@ -1,3 +1,4 @@
+/*
 package app.servlets.filters;
 
 import app.entities.Admin;
@@ -31,3 +32,4 @@ public class OperatorFilter implements Filter {
         }
     }
 }
+*/

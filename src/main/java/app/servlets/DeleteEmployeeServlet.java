@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Admin;
@@ -40,4 +41,4 @@ public class DeleteEmployeeServlet extends HttpServlet {
         adminService.deleteAdmin(employeeToDeleteId);
         resp.sendRedirect("/director-page");
     }
-}
+}*/

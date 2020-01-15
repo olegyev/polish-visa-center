@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Admin;
@@ -71,4 +72,4 @@ public class DirectorPageServlet extends HttpServlet {
         req.setAttribute("no_matches", "No matches");
         doGet(req, resp);
     }
-}
+}*/

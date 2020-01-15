@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import javax.servlet.RequestDispatcher;
@@ -19,4 +20,4 @@ public class ErrorHandler extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("views/errors/error.jsp");
         requestDispatcher.forward(req, resp);
     }
-}
+}*/

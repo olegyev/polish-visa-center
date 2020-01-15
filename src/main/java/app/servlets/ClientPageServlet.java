@@ -1,3 +1,4 @@
+/*
 package app.servlets;
 
 import app.entities.Appointment;
@@ -60,4 +61,4 @@ public class ClientPageServlet extends HttpServlet {
             resp.sendRedirect("/book-appointment");
         }
     }
-}
+}*/

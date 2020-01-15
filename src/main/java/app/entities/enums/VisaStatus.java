@@ -1,6 +1,8 @@
 package app.entities.enums;
 
 public enum VisaStatus {
+    CLIENT_DID_NOT_COME ("Client did not come at the appointment"),
+    DOCS_INCOMPLETE ("Incomplete set of the documents"),
     DOCS_RECEIVED ("Documents received from client"),
     PENDING ("Documents are pending at the embassy"),
     CONFIRMED ("Visa confirmed"),
