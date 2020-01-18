@@ -1,6 +1,7 @@
-package app.first;
+package app.domain.enums;
 
 public enum City {
+
     MINSK ("Minsk"),
     GOMEL ("Gomel"),
     MOGILEV ("Mogilev"),
@@ -26,4 +27,5 @@ public enum City {
 
         return null;
     }
+
 }

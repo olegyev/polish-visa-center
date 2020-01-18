@@ -1,6 +1,7 @@
-package app.first;
+package app.domain.enums;
 
 public enum AdminPosition {
+
     OPERATOR ("Operator"),
     MANAGER ("Manager"),
     DIRECTOR ("Director");
@@ -24,4 +25,5 @@ public enum AdminPosition {
 
         return null;
     }
+
 }
