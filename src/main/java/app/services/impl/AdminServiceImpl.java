@@ -77,6 +77,11 @@ public class AdminServiceImpl implements AdminServiceInterface {
     }
 
     @Override
+    public List<Admin> readByPosition(AdminPosition position) {
+        return adminRepo.findByPosition(position);
+    }
+
+    @Override
     public List<Admin> readByPositionAndCity(AdminPosition position, City city) {
         return adminRepo.readByPositionAndCity(position, city);
     }

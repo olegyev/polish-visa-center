@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface AdminServiceInterface extends CrudServiceInterface<Admin> {
+public interface AdminServiceInterface extends UserServiceInterface<Admin> {
 
-    Admin authenticate(String email, String password);
-    Admin readByEmail(String email);
-    List<Admin> readByLastName(String lastName);
     List<Admin> readByCity(City city);
+    List<Admin> readByPosition(AdminPosition position);
     List<Admin> readByPositionAndCity(AdminPosition position, City city);
     long countAdminsByCityAndPosition(City city, AdminPosition position);
 

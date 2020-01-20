@@ -15,6 +15,7 @@ public interface AdminRepo extends JpaRepository<Admin, Long> {
     Admin findByEmail(String email);
     List<Admin> findByLastName(String lastName);
     List<Admin> findByCity (City city);
+    List<Admin> findByPosition(AdminPosition position);
     List<Admin> readByPositionAndCity(AdminPosition position, City city);
     long countAdminsByCityAndPosition (City city, AdminPosition position);
 

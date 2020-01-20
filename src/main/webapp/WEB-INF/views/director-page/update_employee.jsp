@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="app.entities.enums.AdminPosition" %>
+<%@ page import="app.domain.enums.AdminPosition" %>
 
 <html>
 <head>
@@ -70,7 +70,7 @@
             <tr>
                 <td>City:</td>
                 <td>
-                    <%@page import="app.entities.enums.City"%>
+                    <%@page import="app.domain.enums.City"%>
                     <label>
                         <select class="selectpicker" name="city">
                             <option <c:if test="${employee.getCity().equals(City.MINSK)}"> selected </c:if> value="${City.MINSK}">${City.MINSK.getTitle()}</option>
