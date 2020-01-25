@@ -3,23 +3,30 @@ package app.controllers;
 import app.domain.Admin;
 import app.domain.enums.AdminPosition;
 import app.domain.enums.City;
-import app.domain.views.UserViews;
+import app.dto.EmployeeDto;
+import app.dto.assembler.EmployeeDtoAssembler;
+import app.exceptions.BadRequestException;
 import app.exceptions.NotFoundException;
 import app.services.impl.AdminServiceImpl;
-import com.fasterxml.jackson.annotation.JsonView;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/* Director operates all employees. */
-
 @RestController
-@RequestMapping("director/{director_id}") // Path variable "director_id" is added after login because of REST's statelessness.
+@RequestMapping("employees")
+@RolesAllowed("ROLE_DIRECTOR")
 public class DirectorController {
 
     private final AdminServiceImpl adminService;
@@ -30,78 +37,129 @@ public class DirectorController {
     }
 
     @GetMapping
-    @JsonView(UserViews.AllExceptIdAndPassword.class)
-    public Admin getDirectorById(@PathVariable("director_id") Admin director) {
-        return director;
-    }
+    @Transactional
+    public ResponseEntity<CollectionModel<EmployeeDto>> getEmployees(@RequestParam(required = false) String key) {
+        if (key == null) {
+            List<Admin> employees = adminService.readAll();
 
-    @GetMapping("employees")
-    @JsonView(UserViews.AllExceptIdAndPassword.class)
-    public List<Admin> getAllEmployees() {
-        return adminService.readAll();
-    }
-
-    @GetMapping("employee/{id}")
-    @JsonView(UserViews.IncludingPassword.class)
-    public Admin getEmployeeById(@PathVariable("id") Admin employee) {
-        return employee;
-    }
-
-    /* Search employees by city, position and last name. */
-
-    @GetMapping("employees/{key}")
-    @JsonView(UserViews.AllExceptIdAndPassword.class)
-    public List<Admin> getEmployeesByKey(@PathVariable String key) {
-        List<Admin> employees = new ArrayList<>();
-        boolean found = false;
-
-        City[] cities = City.values();
-        for (City city : cities) {
-            if (city.toString().equals(key.toUpperCase())) {
-                employees = adminService.readByCity(City.valueOf(key.toUpperCase()));
-                found = true;
-                break;
+            if (employees.isEmpty()) {
+                throw new NotFoundException("Cannot find employees.");
             }
-        }
 
-        if (!found) {
-            AdminPosition[] positions = AdminPosition.values();
-            for (AdminPosition position : positions) {
-                if (position.toString().equals(key.toUpperCase())) {
-                    employees = adminService.readByPosition(AdminPosition.valueOf(key.toUpperCase()));
+            CollectionModel<EmployeeDto> dtos = new EmployeeDtoAssembler().toCollectionModel(employees);
+            return ResponseEntity.ok(dtos);
+
+        } else {
+            List<Admin> employees = new ArrayList<>();
+            boolean found = false;
+
+            City[] cities = City.values();
+            for (City city : cities) {
+                if (city.toString().equals(key.toUpperCase())) {
+                    employees = adminService.readByCity(City.valueOf(key.toUpperCase()));
                     found = true;
                     break;
                 }
             }
-        }
 
-        if (!found) {
-            employees = adminService.readByLastName(key);
-        }
+            if (!found) {
+                AdminPosition[] positions = AdminPosition.values();
+                for (AdminPosition position : positions) {
+                    if (position.toString().equals(key.toUpperCase())) {
+                        employees = adminService.readByPosition(AdminPosition.valueOf(key.toUpperCase()));
+                        found = true;
+                        break;
+                    }
+                }
+            }
 
-        if (!employees.isEmpty() && employees.get(0) != null) {
-            return employees;
-        } else {
-            throw new NotFoundException("Cannot find employee by key '" + key + "'");
+            if (!found) {
+                employees = adminService.readByLastName(key);
+            }
+
+            if (!employees.isEmpty() && employees.get(0) != null) {
+                CollectionModel<EmployeeDto> dtos = new EmployeeDtoAssembler().toCollectionModel(employees);
+                return ResponseEntity.ok(dtos);
+            } else {
+                throw new NotFoundException("Cannot find employee by key '" + key + "'.");
+            }
         }
     }
 
-    @PostMapping("employee")
-    public ResponseEntity<HttpStatus> addEmployee(@Valid @RequestBody Admin employee) {
-        adminService.create(employee);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @GetMapping("{id}")
+    @Transactional
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable String id) {
+        if (!isNumber(id)) {
+            throw new BadRequestException("ID = '" + id + "' is not valid. ID should be a number.");
+        }
+
+        Admin employee = adminService.readById(Long.parseLong(id));
+
+        if (employee == null) {
+            throw new NotFoundException("Cannot find employee with ID = '" + id + "'.");
+        }
+
+        EmployeeDto dto = new EmployeeDtoAssembler().toModel(employee);
+        return ResponseEntity.ok(dto);
     }
 
-    @PutMapping("employee/{id}")
-    public ResponseEntity<HttpStatus> updateEmployee(@PathVariable("id") Admin oldEmployee, @Valid @RequestBody Admin newEmployee) {
-        adminService.update(oldEmployee, newEmployee);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PostMapping
+    @Transactional
+    public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody Admin employee) {
+        Admin createdEmployee = adminService.create(employee);
+        EmployeeDto dto = new EmployeeDtoAssembler().toModel(createdEmployee);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("employee/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable long id) {
-        adminService.delete(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PutMapping("{id}")
+    @Transactional
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @Valid @RequestBody Admin newEmployee,
+                                                      Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Admin loggedEmployee = adminService.readByEmail(userDetails.getUsername());
+
+        if (!isNumber(id)) {
+            throw new BadRequestException("ID = '" + id + "' is not valid. ID should be a number.");
+        }
+
+        long parsedId = Long.parseLong(id);
+
+        if (parsedId == loggedEmployee.getId() && !loggedEmployee.getPosition().equals(newEmployee.getPosition())) {
+            throw new BadRequestException("The logged employee cannot change his/her position.");
+        }
+
+        Admin updatedEmployee = adminService.update(parsedId, newEmployee);
+        EmployeeDto dto = new EmployeeDtoAssembler().toModel(updatedEmployee);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    @Transactional
+    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable String id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Admin loggedEmployee = adminService.readByEmail(userDetails.getUsername());
+
+        if (!isNumber(id)) {
+            throw new BadRequestException("ID = '" + id + "' is not valid. ID should be a number.");
+        }
+
+        long parsedId = Long.parseLong(id);
+
+        if (parsedId == loggedEmployee.getId()) {
+            throw new BadRequestException("The logged employee cannot delete his-/herself.");
+        }
+
+        adminService.delete(parsedId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private boolean isNumber(String idToCheck) {
+        try {
+            Long.parseLong(idToCheck);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
 }

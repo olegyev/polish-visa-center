@@ -3,9 +3,12 @@ package app.services.impl;
 import app.domain.Admin;
 import app.domain.enums.AdminPosition;
 import app.domain.enums.City;
+import app.exceptions.BadRequestException;
+import app.exceptions.InternalServerException;
 import app.exceptions.NotFoundException;
 import app.repos.AdminRepo;
 import app.services.AdminServiceInterface;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +26,24 @@ public class AdminServiceImpl implements AdminServiceInterface {
     }
 
     @Override
-    public Admin create(Admin admin) {
-        return adminRepo.save(admin);
+    public Admin create(Admin employee) {
+        if (!bodyIsOk(employee)) {
+            throw new BadRequestException("The form filled incorrectly.");
+        }
+
+        if (emailIsInDataBase(employee)) {
+            throw new BadRequestException("There is another employee in database with such email.");
+        }
+
+        Admin createdEmployee;
+
+        try {
+            createdEmployee = adminRepo.save(employee);
+        } catch (IllegalArgumentException e) {
+            throw new InternalServerException("The admin is not added to the database due to the server's internal reasons.");
+        }
+
+        return createdEmployee;
     }
 
     @Override
@@ -34,18 +53,33 @@ public class AdminServiceImpl implements AdminServiceInterface {
 
     @Override
     public Admin readById(long id) {
-        return adminRepo.getOne(id);
+        return adminRepo.findById(id).orElse(null);
     }
 
     @Override
-    public Admin update(Admin adminFromDb, Admin newAdmin) {
+    public Admin update(long id, Admin newAdmin) {
+        Admin adminFromDb;
+
+        if (!bodyIsOk(newAdmin)) {
+            throw new BadRequestException("The form filled incorrectly.");
+        } else {
+            adminFromDb = adminRepo.findById(id).orElse(null);
+
+            if (adminFromDb == null) {
+                throw new NotFoundException("Cannot find employee with ID = '" + id + "'.");
+            } else if (emailIsInDataBase(newAdmin) && !adminFromDb.getEmail().equals(newAdmin.getEmail())) {
+                throw new BadRequestException("There is another employee in database with such email.");
+            } else {
+                BeanUtils.copyProperties(newAdmin, adminFromDb, "id");
+            }
+        }
+
         Admin updatedAdmin;
 
         try {
-            BeanUtils.copyProperties(newAdmin, adminFromDb, "id");
             updatedAdmin = adminRepo.save(adminFromDb);
         } catch (IllegalArgumentException e) {
-            throw new NotFoundException("Admin is not found");
+            throw new InternalServerException("The admin is not modified due to the server's internal reasons.");
         }
 
         return updatedAdmin;
@@ -53,12 +87,13 @@ public class AdminServiceImpl implements AdminServiceInterface {
 
     @Override
     public void delete(long id) {
-        adminRepo.deleteById(id);
-    }
+        Admin admin = readById(id);
 
-    @Override
-    public Admin authenticate(String email, String password) {
-        return adminRepo.findByEmailAndPassword(email, password);
+        if (admin == null) {
+            throw new NotFoundException("Cannot find employee with ID = '" + id + "'.");
+        } else {
+            adminRepo.deleteById(id);
+        }
     }
 
     @Override
@@ -89,6 +124,22 @@ public class AdminServiceImpl implements AdminServiceInterface {
     @Override
     public long countAdminsByCityAndPosition(City city, AdminPosition position) {
         return adminRepo.countAdminsByCityAndPosition(city, position);
+    }
+
+    private boolean bodyIsOk(Admin body) {
+        return body.getFirstName() != null
+                && body.getLastName() != null
+                && body.getEmail() != null
+                && body.getPhoneNumber() != null
+                && body.getPassword() != null
+                && body.getPosition() != null
+                && body.getCity() != null;
+    }
+
+    private boolean emailIsInDataBase(Admin employeeToCreate) {
+        String email = employeeToCreate.getEmail();
+        Admin employeeInDataBase = readByEmail(email);
+        return employeeInDataBase != null;
     }
 
 }
