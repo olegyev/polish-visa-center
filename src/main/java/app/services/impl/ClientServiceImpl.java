@@ -7,6 +7,7 @@ import app.services.ClientServiceInterface;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
     private final ClientRepo clientRepo;
 
     @Autowired
-    public ClientServiceImpl(ClientRepo clientRepo) {
+    public ClientServiceImpl(final ClientRepo clientRepo) {
         this.clientRepo = clientRepo;
     }
 
@@ -27,7 +28,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
-    public List<Client> readAll() {
+    public List<Client> readAll(Specification<Client> spec) {
         return clientRepo.findAll();
     }
 

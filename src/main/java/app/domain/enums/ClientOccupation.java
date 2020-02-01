@@ -2,11 +2,11 @@ package app.domain.enums;
 
 public enum ClientOccupation {
 
-    EMPLOYED ("Employed"),
-    ENTREPRENEUR ("Entrepreneur"),
-    UNEMPLOYED ("Unemployed"),
-    FOREIGN_CITIZEN ("Foreign citizen"),
-    MINOR ("Minor");
+    EMPLOYED("Employed"),
+    ENTREPRENEUR("Entrepreneur"),
+    UNEMPLOYED("Unemployed"),
+    FOREIGN_CITIZEN("Foreign citizen"),
+    MINOR("Minor");
 
     private String title;
 
@@ -18,9 +18,9 @@ public enum ClientOccupation {
         return title;
     }
 
-    public static ClientOccupation findByTitle(String title){
-        for (ClientOccupation constant : values()){
-            if(title.equals(constant.getTitle())){
+    public static ClientOccupation findByTitle(String title) {
+        for (ClientOccupation constant : values()) {
+            if (title.equals(constant.getTitle())) {
                 return constant;
             }
         }

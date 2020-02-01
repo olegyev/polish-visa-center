@@ -1,7 +1,7 @@
 package app.domain;
 
-import app.domain.enums.AdminPosition;
 import app.domain.enums.City;
+import app.domain.enums.EmployeePosition;
 
 import lombok.*;
 
@@ -17,11 +17,11 @@ import javax.persistence.Table;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Admin extends User {
+public class Employee extends User {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private AdminPosition position;
+    private EmployeePosition position;
 
     @NonNull
     @Enumerated(EnumType.STRING)

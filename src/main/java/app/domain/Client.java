@@ -9,11 +9,11 @@ import javax.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "clients")
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Entity
-@Table(name = "clients")
 public class Client extends User {
 
     @Getter

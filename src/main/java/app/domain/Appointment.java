@@ -9,22 +9,17 @@ import javax.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "appointments")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Entity
-@Table(name = "appointments")
 public class Appointment extends app.domain.Entity {
-
-    @Setter(AccessLevel.NONE)
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
     @NonNull
     @OneToOne
-    @JoinColumn(name = "client_id", referencedColumnName="id")
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
     @NonNull

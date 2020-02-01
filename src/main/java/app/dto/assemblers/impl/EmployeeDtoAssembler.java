@@ -1,8 +1,9 @@
-package app.dto.assembler;
+package app.dto.assemblers.impl;
 
-import app.controllers.DirectorController;
-import app.domain.Admin;
+import app.controllers.EmployeeController;
+import app.domain.Employee;
 import app.dto.EmployeeDto;
+import app.dto.assemblers.DtoAssemblerInterface;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -14,13 +15,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class EmployeeDtoAssembler extends RepresentationModelAssemblerSupport<Admin, EmployeeDto> {
+public class EmployeeDtoAssembler
+        extends RepresentationModelAssemblerSupport<Employee, EmployeeDto>
+        implements DtoAssemblerInterface<Employee, EmployeeDto> {
 
     public EmployeeDtoAssembler() {
-        super(DirectorController.class, EmployeeDto.class);
+        super(EmployeeController.class, EmployeeDto.class);
     }
 
-    public EmployeeDto toModel(Admin employee) {
+    @Override
+    public EmployeeDto toModel(Employee employee) {
         EmployeeDto dto = createModelWithId(employee.getId(), employee);
 
         dto.setFirstName(employee.getFirstName());
@@ -30,13 +34,15 @@ public class EmployeeDtoAssembler extends RepresentationModelAssemblerSupport<Ad
         dto.setPosition(employee.getPosition().toString());
         dto.setCity(employee.getCity().toString());
 
-        dto.add(linkTo(methodOn(DirectorController.class).getEmployees(null)).withSelfRel());
+        dto.add(linkTo(methodOn(EmployeeController.class).getEmployees(null, null, null)).withRel("employees"));
+
         return dto;
     }
 
-    public CollectionModel<EmployeeDto> toCollectionModel(List<Admin> employees) {
+    @Override
+    public CollectionModel<EmployeeDto> toCollectionModel(List<Employee> employees) {
         CollectionModel<EmployeeDto> dtos = super.toCollectionModel(employees);
-        dtos.add(linkTo(methodOn(DirectorController.class).getEmployees(null)).withSelfRel());
+        dtos.add(linkTo(methodOn(EmployeeController.class).getEmployees(null, null, null)).withSelfRel());
         return dtos;
     }
 

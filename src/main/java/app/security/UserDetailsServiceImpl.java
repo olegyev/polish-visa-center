@@ -1,8 +1,13 @@
 package app.security;
 
-import app.domain.Admin;
-import app.services.impl.AdminServiceImpl;
+import app.domain.Employee;
+import app.services.ClientServiceInterface;
+import app.services.EmployeeServiceInterface;
 import app.services.impl.ClientServiceImpl;
+import app.services.impl.EmployeeServiceImpl;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +24,14 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final AdminServiceImpl adminService;
-    private final ClientServiceImpl clientService;
+    private final static Logger log = LogManager.getLogger(UserDetailsServiceImpl.class);
+
+    private final EmployeeServiceInterface employeeService;
+    private final ClientServiceInterface clientService;
 
     @Autowired
-    public UserDetailsServiceImpl(AdminServiceImpl adminService, ClientServiceImpl clientService) {
-        this.adminService = adminService;
+    public UserDetailsServiceImpl(final EmployeeServiceImpl employeeService, final ClientServiceImpl clientService) {
+        this.employeeService = employeeService;
         this.clientService = clientService;
     }
 
@@ -34,23 +41,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<String> roleNames = new ArrayList<>();
 
         try {
-            user = adminService.readByEmail(email);
+            user = employeeService.readByEmail(email);
             if (user != null) {
-                roleNames.add(((Admin) user).getPosition().toString());
+                roleNames.add(((Employee) user).getPosition().toString());
+                log.info("Found employee by login: {}", user.getEmail());
             } else {
                 user = clientService.readByEmail(email);
                 if (user != null) {
                     roleNames.add("CLIENT");
+                    log.info("Found client by login: {}", user.getEmail());
                 }
             }
         } catch (NullPointerException ignored) {
         }
 
-        if (user != null) {
-            System.out.println("Found user by login: " + user); // log
-        } else {
-            System.out.println("User not found by login! " + email); // log
-            throw new UsernameNotFoundException("User with e-mail '" + email + "' was not found in the database by login.");
+        if (user == null) {
+            UsernameNotFoundException exception = new UsernameNotFoundException("User with username '" + email
+                    + "' was not found in the database by login attempt.");
+            log.error(exception);
+            throw exception;
         }
 
         List<GrantedAuthority> grantList = new ArrayList<>();
@@ -58,6 +67,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
             grantList.add(authority);
         }
+
+        log.info("User {} was granted with roles {}.", user.getEmail(), grantList.toString());
 
         return new User(user.getEmail(), user.getPassword(), grantList);
     }

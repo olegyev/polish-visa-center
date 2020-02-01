@@ -29,6 +29,9 @@
         <java.version>1.8</java.version>
         <security.version>1.5.9.RELEASE</security.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <validation.version>2.0.0.Final</validation.version>
+        <log4j-api.version>2.2</log4j-api.version>
+        <log4j-core.version>2.2</log4j-core.version>
     </properties>
 
     <dependencies>
@@ -69,6 +72,24 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${validation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
         </dependency>
 
         <dependency>

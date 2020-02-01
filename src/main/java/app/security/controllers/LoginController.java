@@ -6,6 +6,9 @@ import app.security.models.LoginRequest;
 import app.security.models.LoginResponse;
 import app.security.utils.JwtUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,14 +27,18 @@ import java.net.URI;
 @RequestMapping("login")
 public class LoginController {
 
-    private AuthenticationManager authenticationManager;
-    private JwtUtil jwtTokenUtil;
-    private UserDetailsServiceImpl userDetailsService;
+    private final static Logger log = LogManager.getLogger(LoginController.class);
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public LoginController(AuthenticationManager authenticationManager, JwtUtil jwtTokenUtil, UserDetailsServiceImpl userDetailsService) {
+    public LoginController(final AuthenticationManager authenticationManager,
+                           final JwtUtil jwtUtil,
+                           final UserDetailsServiceImpl userDetailsService) {
         this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
@@ -46,7 +53,7 @@ public class LoginController {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        String jwt = jwtTokenUtil.generateToken(userDetails);
+        String jwt = jwtUtil.generateToken(userDetails);
         String roles = userDetails.getAuthorities().toString();
         String path;
 
@@ -56,7 +63,7 @@ public class LoginController {
             if (roles.contains("ROLE_DIRECTOR")) {
                 path = "/employees";
             } else if (roles.contains("ROLE_MANAGER")) {
-                path = "/operators";
+                path = "/employees";
             } else if (roles.contains("ROLE_OPERATOR")) {
                 path = "/applications";
             } else {
@@ -66,6 +73,9 @@ public class LoginController {
 
         LoginResponse loginResponse = new LoginResponse(jwt);
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUri();
+
+        log.info("Token created for user {} with role {}.", userDetails.getUsername(), userDetails.getAuthorities().toString());
+
         return ResponseEntity.ok().location(uri).body(loginResponse);
     }
 

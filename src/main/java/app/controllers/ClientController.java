@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.services.impl.ClientServiceImpl;
+import app.services.ClientServiceInterface;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,10 +13,10 @@ import javax.annotation.security.RolesAllowed;
 @RestController
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
+    private final ClientServiceInterface clientService;
 
     @Autowired
-    public ClientController(ClientServiceImpl clientService) {
+    public ClientController(final ClientServiceInterface clientService) {
         this.clientService = clientService;
     }
 
