@@ -6,12 +6,10 @@ import app.domain.enums.EmployeePosition;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "admins")
+@Table(name = "employees")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,10 +18,12 @@ import javax.persistence.Table;
 public class Employee extends User {
 
     @NonNull
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private EmployeePosition position;
 
     @NonNull
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     private City city;
 

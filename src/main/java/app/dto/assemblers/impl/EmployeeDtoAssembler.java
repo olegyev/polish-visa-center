@@ -5,11 +5,8 @@ import app.domain.Employee;
 import app.dto.EmployeeDto;
 import app.dto.assemblers.DtoAssemblerInterface;
 
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -34,16 +31,11 @@ public class EmployeeDtoAssembler
         dto.setPosition(employee.getPosition().toString());
         dto.setCity(employee.getCity().toString());
 
-        dto.add(linkTo(methodOn(EmployeeController.class).getEmployees(null, null, null)).withRel("employees"));
+        dto.add(linkTo(methodOn(EmployeeController.class)
+                .getEmployees(null, null, null, null, null, null, null, null))
+                .withRel("employees"));
 
         return dto;
-    }
-
-    @Override
-    public CollectionModel<EmployeeDto> toCollectionModel(List<Employee> employees) {
-        CollectionModel<EmployeeDto> dtos = super.toCollectionModel(employees);
-        dtos.add(linkTo(methodOn(EmployeeController.class).getEmployees(null, null, null)).withSelfRel());
-        return dtos;
     }
 
 }

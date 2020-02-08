@@ -6,64 +6,32 @@ import app.domain.enums.EmployeePosition;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.text.MessageFormat;
 
-public class EmployeeJpaSpecification implements Specification<Employee> {
+public final class EmployeeJpaSpecification {
 
-    private final Employee filter;
-
-    public EmployeeJpaSpecification(final Employee filter) {
-        super();
-        this.filter = filter;
+    public static Specification<Employee> cityContains(City city) {
+        return (root, query, builder) -> builder.equal(root.get("city"), contains(city));
     }
 
-    @Override
-    public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        City city = filter.getCity();
-        EmployeePosition position = filter.getPosition();
-        String lastName = filter.getLastName();
+    public static Specification<Employee> positionContains(EmployeePosition position) {
+        return (root, query, builder) -> builder.equal(root.get("position"), contains(position));
+    }
 
-        Predicate predicate = builder.disjunction();
+    public static Specification<Employee> lastNameContains(String lastName) {
+        return (root, query, builder) -> builder.like(root.get("lastName"), contains(lastName));
+    }
 
-        if (city != null && position == null && lastName == null) {
-            predicate.getExpressions().add(builder.equal(root.get("city"), city));
+    private static City contains(City city) {
+        return City.valueOf(MessageFormat.format("{0}", city));
+    }
 
-        } else if (city == null && position != null && lastName == null) {
-            predicate.getExpressions().add(builder.equal(root.get("position"), position));
+    private static EmployeePosition contains(EmployeePosition position) {
+        return EmployeePosition.valueOf(MessageFormat.format("{0}", position));
+    }
 
-        } else if (city == null && position == null && lastName != null) {
-            predicate.getExpressions().add(builder.equal(root.get("lastName"), lastName));
-
-        } else if (city != null && position != null && lastName == null) {
-            predicate.getExpressions().add(builder.and(
-                    builder.equal(root.get("city"), city),
-                    builder.equal(root.get("position"), position)
-            ));
-
-        } else if (city != null && position == null) {
-            predicate.getExpressions().add(builder.and(
-                    builder.equal(root.get("city"), city),
-                    builder.equal(root.get("lastName"), lastName)
-            ));
-
-        } else if (city == null && position != null) {
-            predicate.getExpressions().add(builder.and(
-                    builder.equal(root.get("position"), position),
-                    builder.equal(root.get("lastName"), filter.getLastName())
-            ));
-
-        } else {
-            predicate.getExpressions().add(builder.and(
-                    builder.equal(root.get("city"), city),
-                    builder.equal(root.get("position"), position),
-                    builder.equal(root.get("lastName"), lastName)
-            ));
-        }
-
-        return predicate;
+    private static String contains(String expression) {
+        return MessageFormat.format("%{0}%", expression);
     }
 
 }

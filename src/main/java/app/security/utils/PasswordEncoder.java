@@ -10,7 +10,7 @@ public class PasswordEncoder {
     }
 
     public static void main(String[] args) {
-        String password = "password123&";
+        String password = "password123";
         String encryptedPassword = encryptPassword(password);
 
         System.out.println("Encrypted Password: " + encryptedPassword);

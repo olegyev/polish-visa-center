@@ -3,14 +3,10 @@ package app.dto.assemblers;
 import app.domain.Entity;
 import app.dto.AbstractDto;
 
-import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 
-import java.util.List;
-
-public interface DtoAssemblerInterface<T extends Entity, S extends AbstractDto> {
+public interface DtoAssemblerInterface<T extends Entity, S extends AbstractDto> extends RepresentationModelAssembler<T, S> {
 
     S toModel(T t);
-
-    CollectionModel<S> toCollectionModel(List<T> t);
 
 }

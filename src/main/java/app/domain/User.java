@@ -22,33 +22,35 @@ import javax.validation.constraints.Size;
 public abstract class User extends Entity {
 
     @NonNull
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 50)
     @NotBlank(message = "Field must be filled.")
     @Size(min = 1, max = 50, message = "Length must be between 1 and 50.")
     @Pattern(regexp = "^[A-Z -]+$", message = "Only uppercase latin letters, spaces and dashes are allowed.")
     protected String firstName;
 
     @NonNull
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 50)
     @NotBlank(message = "Field must be filled.")
     @Size(min = 1, max = 50, message = "Length must be between 1 and 50.")
     @Pattern(regexp = "^[A-Z -]+$", message = "Only uppercase latin letters, spaces and dashes are allowed.")
     protected String lastName;
 
     @NonNull
+    @Column(unique = true, nullable = false)
     @NotBlank(message = "Field must be filled.")
     @Size(min = 3, max = 255, message = "Length must be between 3 and 255.")
     @Email(message = "Email should contain @.")
     protected String email;
 
     @NonNull
+    @Column(name = "phone_number", nullable = false, length = 50)
     @NotBlank(message = "Field must be filled.")
-    @Column(name = "phone_number")
     @Size(min = 11, max = 50, message = "Length must be between 11 and 50.")
-    @Pattern(regexp = "^\\+[0-9]+$", message = "Phone number should match a sample: +375291001010.")
+    @Pattern(regexp = "^[0-9]+$", message = "Phone number should contain code and number itself, e.g. 375291001010.")
     protected String phoneNumber;
 
     @NonNull
+    @Column(nullable = false)
     @NotBlank(message = "Field must be filled.")
     @Size(min = 8, max = 255, message = "Password should be between 8 and 255 characters.")
     protected String password;

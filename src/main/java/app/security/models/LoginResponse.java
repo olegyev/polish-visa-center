@@ -1,5 +1,7 @@
 package app.security.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,5 +16,9 @@ public class LoginResponse implements Serializable {
 
     @NonNull
     private String jwt;
+
+    @NonNull
+    @JsonIgnore
+    private String redirectPath;
 
 }

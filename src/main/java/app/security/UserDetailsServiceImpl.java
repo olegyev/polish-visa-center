@@ -37,22 +37,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        app.domain.User user = null;
         List<String> roleNames = new ArrayList<>();
 
-        try {
-            user = employeeService.readByEmail(email);
+        app.domain.User user = employeeService.readByEmail(email);
+        if (user != null) {
+            roleNames.add(((Employee) user).getPosition().toString());
+            log.info("Found employee by login: {}", user.getEmail());
+        } else {
+            user = clientService.readByEmail(email);
             if (user != null) {
-                roleNames.add(((Employee) user).getPosition().toString());
-                log.info("Found employee by login: {}", user.getEmail());
-            } else {
-                user = clientService.readByEmail(email);
-                if (user != null) {
-                    roleNames.add("CLIENT");
-                    log.info("Found client by login: {}", user.getEmail());
-                }
+                roleNames.add("CLIENT");
+                log.info("Found client by login: {}", user.getEmail());
             }
-        } catch (NullPointerException ignored) {
         }
 
         if (user == null) {

@@ -32,8 +32,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
+    @Value("${jwt.route.registration.path}")
+    private String registrationPath;
+
     @Value("${jwt.route.authentication.path}")
-    private String path;
+    private String loginPath;
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -55,9 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/", path).permitAll().anyRequest().authenticated()
+                .authorizeRequests().antMatchers("/", registrationPath, loginPath).permitAll().anyRequest().authenticated()
                 .and()
-                .formLogin().loginProcessingUrl("/j_spring_security_check").loginPage(path)
+                .formLogin().loginProcessingUrl("/j_spring_security_check").loginPage(loginPath)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).accessDeniedPage("/403")
                 .and()
