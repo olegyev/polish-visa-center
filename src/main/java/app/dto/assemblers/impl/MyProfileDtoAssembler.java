@@ -3,7 +3,7 @@ package app.dto.assemblers.impl;
 import app.controllers.ClientPageController;
 import app.domain.Client;
 import app.dto.ClientDtoResponse;
-import app.dto.assemblers.ClientProfileDtoAssemblerInterface;
+import app.dto.assemblers.MyProfileDtoAssemblerInterface;
 
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class ClientProfileDtoAssembler
+public class MyProfileDtoAssembler
         extends RepresentationModelAssemblerSupport<Client, ClientDtoResponse>
-        implements ClientProfileDtoAssemblerInterface<Client, ClientDtoResponse> {
+        implements MyProfileDtoAssemblerInterface<Client, ClientDtoResponse> {
 
-    public ClientProfileDtoAssembler() {
+    public MyProfileDtoAssembler() {
         super(ClientPageController.class, ClientDtoResponse.class);
     }
 

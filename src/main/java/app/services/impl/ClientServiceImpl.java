@@ -2,6 +2,9 @@ package app.services.impl;
 
 import app.domain.Client;
 import app.domain.Employee;
+import app.domain.enums.City;
+import app.domain.enums.VisaApplicationStatus;
+import app.domain.enums.VisaType;
 import app.dto.ClientDtoRequest;
 import app.exceptions.BadRequestException;
 import app.exceptions.NotFoundException;
@@ -67,46 +70,54 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
-    public List<Client> readAll(UserDetails userDetails, String lastName, String passportId, String email, String phoneNumber, Pageable pageable) {
+    public Page<Client> readAll(UserDetails userDetails,
+                                String lastName,
+                                String passportId,
+                                String email,
+                                String phoneNumber,
+                                VisaType requiredVisaType,
+                                City appointmentCity,
+                                String appointmentDate,
+                                String appointmentTime,
+                                VisaApplicationStatus visaApplicationStatus,
+                                String visaNumber,
+                                VisaType issuedVisaType,
+                                String issueDate,
+                                String expiryDate,
+                                Pageable pageable) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
-        List<Client> clients;
 
-        if (lastName == null && passportId == null && email == null && phoneNumber == null) {
-            clients = readAll(null, pageable);
+        Specification<Client> spec = Specification
+                .where(lastName == null ? null : ClientJpaSpecification.lastNameContains(lastName.toUpperCase()))
+                .and(passportId == null ? null : ClientJpaSpecification.passportIdContains(passportId))
+                .and(email == null ? null : ClientJpaSpecification.emailContains(email))
+                .and(phoneNumber == null ? null : ClientJpaSpecification.phoneNumberContains(phoneNumber))
+                .and(requiredVisaType == null ? null : ClientJpaSpecification.requiredVisaTypeContains(requiredVisaType))
+                .and(appointmentCity == null ? null : ClientJpaSpecification.appointmentCityContains(appointmentCity))
+                .and(appointmentDate == null ? null : ClientJpaSpecification.appointmentDateContains(appointmentDate))
+                .and(appointmentTime == null ? null : ClientJpaSpecification.appointmentTimeContains(appointmentTime))
+                .and(visaApplicationStatus == null ? null : ClientJpaSpecification.visaApplicationStatusContains(visaApplicationStatus))
+                .and(visaNumber == null ? null : ClientJpaSpecification.visaNumberContains(visaNumber))
+                .and(issuedVisaType == null ? null : ClientJpaSpecification.issuedVisaTypeContains(issuedVisaType))
+                .and(issueDate == null ? null : ClientJpaSpecification.issueDateContains(issueDate))
+                .and(expiryDate == null ? null : ClientJpaSpecification.expiryDateContains(expiryDate));
 
-            if (clients.isEmpty()) {
-                NotFoundException exception = new NotFoundException("Cannot find clients.");
-                log.error(exception);
-                throw exception;
-            } else {
-                log.info("Found employees by no search criteria by employee with ID = {}.", loggedOperator.getId());
-            }
+        Page<Client> clients = readAll(spec, pageable);
 
+        if (clients.isEmpty()) {
+            NotFoundException exception = new NotFoundException("Cannot find clients.");
+            log.error(exception);
+            throw exception;
         } else {
-            Specification<Client> spec = Specification
-                    .where(lastName == null ? null : ClientJpaSpecification.lastNameContains(lastName.toUpperCase()))
-                    .and(passportId == null ? null : ClientJpaSpecification.passportIdContains(passportId))
-                    .and(email == null ? null : ClientJpaSpecification.emailContains(email))
-                    .and(phoneNumber == null ? null : ClientJpaSpecification.phoneNumberContains(phoneNumber));
-
-            clients = readAll(spec, pageable);
-
-            if (clients.isEmpty() || clients.get(0) == null) {
-                NotFoundException exception = new NotFoundException("Cannot find clients by search criteria.");
-                log.error(exception);
-                throw exception;
-            } else {
-                log.info("Found clients by search criteria by operator with ID = {}.", loggedOperator.getId());
-            }
+            log.info("Found clients by operator with ID = {}.", loggedOperator.getId());
         }
 
         return clients;
     }
 
     @Override
-    public List<Client> readAll(Specification<Client> spec, Pageable pageable) {
-        Page<Client> page = clientRepo.findAll(spec, pageable);
-        return page.getContent();
+    public Page<Client> readAll(Specification<Client> spec, Pageable pageable) {
+        return clientRepo.findAll(spec, pageable);
     }
 
     @Override
@@ -136,7 +147,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
 
         Client updatedClient;
         if (!bodyIsOk(newClient)) {
-            log.error("Attempt to update a client failed due to the incorrect form filling.");
+            log.error("Attempt to update a client with ID = {} failed due to the incorrect form filling.", id);
             throw new BadRequestException("The form filled incorrectly.");
         } else {
             updatedClient = update(id, newClient);
@@ -167,13 +178,12 @@ public class ClientServiceImpl implements ClientServiceInterface {
             BeanUtils.copyProperties(newClient, clientFromDb, "id", "password", "personalDataProcAgreement");
         }
 
-        return clientRepo.save(clientFromDb);
+        return update(id, clientFromDb);
     }
 
-    /* IGNORED */
     @Override
     public Client update(long id, Client client) {
-        return null;
+        return clientRepo.save(client);
     }
 
     @Override

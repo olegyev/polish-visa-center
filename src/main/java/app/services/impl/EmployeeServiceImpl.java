@@ -70,12 +70,12 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
-    public List<Employee> readAll(UserDetails userDetails, City city, EmployeePosition position, String lastName, Pageable pageable) {
+    public Page<Employee> readAll(UserDetails userDetails, City city, EmployeePosition position, String lastName, Pageable pageable) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
 
         if (city == null && position == null && lastName == null) {
             List<Employee> employees = !isManager(loggedEmployee)
-                    ? readAll(null, pageable)
+                    ? readAll(null, pageable).getContent()
                     : readByPositionAndCity(EmployeePosition.OPERATOR, loggedEmployee.getCity());
 
             if (employees.isEmpty()) {
@@ -86,10 +86,10 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
                 log.info("Found employees by no search criteria by employee with ID = {}.", loggedEmployee.getId());
             }
 
-            return employees;
+            return readAll(null, pageable);
 
         } else {
-            List<Employee> employees;
+            Page<Employee> employees;
             Specification<Employee> spec;
 
             if (!isManager(loggedEmployee)) {
@@ -100,7 +100,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
 
                 employees = readAll(spec, pageable);
 
-                if (employees.isEmpty() || employees.get(0) == null) {
+                if (employees.isEmpty()) {
                     NotFoundException exception = new NotFoundException("Cannot find employees by search criteria.");
                     log.error(exception);
                     throw exception;
@@ -119,7 +119,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
                     spec = Specification.where(EmployeeJpaSpecification.lastNameContains(lastName.toUpperCase()));
                     employees = readAll(spec, pageable);
 
-                    if (employees.isEmpty() || employees.get(0) == null) {
+                    if (employees.isEmpty()) {
                         NotFoundException exception = new NotFoundException("Cannot find operators in "
                                 + loggedEmployee.getCity().toString()
                                 + " with last name '" + lastName.toUpperCase() + "'.");
@@ -137,9 +137,8 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
-    public List<Employee> readAll(Specification<Employee> spec, Pageable pageable) {
-        Page<Employee> page = employeeRepo.findAll(spec, pageable);
-        return page.getContent();
+    public Page<Employee> readAll(Specification<Employee> spec, Pageable pageable) {
+        return employeeRepo.findAll(spec, pageable);
     }
 
     @Override
@@ -197,7 +196,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
 
         Employee updatedEmployee;
         if (!bodyIsOk(newEmployee)) {
-            log.error("Attempt to update an employee failed due to the incorrect form filling.");
+            log.error("Attempt to update an employee with ID = {} failed due to the incorrect form filling.", id);
             throw new BadRequestException("The form filled incorrectly.");
         } else {
             updatedEmployee = update(id, newEmployee);

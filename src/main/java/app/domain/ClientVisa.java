@@ -1,5 +1,7 @@
 package app.domain;
 
+import app.domain.enums.VisaType;
+
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -16,16 +18,12 @@ import java.util.Date;
 public class ClientVisa extends app.domain.Entity {
 
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
-    private Client client;
-
-    @NonNull
     @Column(name = "visa_num", nullable = false, length = 50)
     private String visaNumber;
 
     @Column(name = "visa_type", nullable = false)
-    private char visaType;
+    @Enumerated(EnumType.STRING)
+    private VisaType visaType;
 
     @NonNull
     @Column(name = "issue_date", nullable = false)
@@ -36,5 +34,10 @@ public class ClientVisa extends app.domain.Entity {
     @Column(name = "expiry_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date expiryDate;
+
+    @NonNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
+    private Client client;
 
 }

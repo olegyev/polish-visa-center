@@ -15,7 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 @Constraint(validatedBy = DateValidator.class)
-public @interface ValidDate {
+public @interface DateLimit {
 
     String message() default "Invalid date.";
 
@@ -23,8 +23,17 @@ public @interface ValidDate {
 
     Class<? extends Payload>[] payload() default {};
 
-    boolean optional() default false;
+    /* Format as "yyyy-MM-dd". Including provided date. */
+    String lower() default "";
 
-    String limit();
+    /* Format as "yyyy-MM-dd". Including provided date. */
+    String upper() default "";
+
+    /* In days. Including upper and lower limits, e.g.
+     * lower = '1900-01-01' + range = 2 -> from 1900-01-01 to 1900-01-03 including;
+     * upper = '1900-01-10' - range = 2 -> from 1900-01-08 to 1900-01-10 including;
+     * but excluding today if is given without explicit lower and upper limits,
+     * e.g. today is 1900-01-01 + range = 2 -> valid dates are 1900-01-02 and 1900-01-03.*/
+    int range() default 0;
 
 }

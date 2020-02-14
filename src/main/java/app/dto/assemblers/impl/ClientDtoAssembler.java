@@ -35,7 +35,10 @@ public class ClientDtoAssembler
         dto.setOccupation(client.getOccupation().toString());
 
         dto.add(linkTo(methodOn(ClientController.class)
-                .getClients(null, null, null, null, null, null, null, null, null))
+                .getClients(null, null, null, null, null,
+                        null, null, null, null,
+                        null, null, null, null,
+                        null, null, null, null, null))
                 .withRel("clients"));
 
         return dto;

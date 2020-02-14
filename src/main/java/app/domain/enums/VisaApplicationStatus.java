@@ -1,6 +1,6 @@
 package app.domain.enums;
 
-public enum ApplicationStatus {
+public enum VisaApplicationStatus {
 
     BOOKED,
     DID_NOT_COME,

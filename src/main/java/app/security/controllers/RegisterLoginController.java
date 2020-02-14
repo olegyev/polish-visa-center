@@ -71,7 +71,7 @@ public class RegisterLoginController {
         String path;
 
         if (roles.contains("ROLE_CLIENT")) {
-            path = "/my-application";
+            path = "/my-visa-application";
         } else {
             if (roles.contains("ROLE_DIRECTOR")) {
                 path = "/employees";

@@ -30,7 +30,7 @@ create table if not exists visa_applications
     appointment_date date not null,
     appointment_time varchar(10) not null,
     city varchar(30) not null,
-    required_visa_type char not null,
+    required_visa_type varchar(1) not null,
     client_id bigint not null
         constraint visa_applications_clients_id_fk
             references clients
@@ -46,7 +46,7 @@ create table if not exists client_visas
     expiry_date date not null,
     issue_date date not null,
     visa_num varchar(50) not null,
-    visa_type char not null,
+    visa_type varchar(1) not null,
     client_id bigint not null
         constraint client_visas_clients_id_fk
             references clients
@@ -76,7 +76,7 @@ create table if not exists visa_documents
             primary key,
     document_description varchar(255) not null,
     client_occupation varchar(30) not null,
-    visa_type char not null
+    visa_type varchar(1) not null
 );
 
 alter table visa_documents owner to postgres;

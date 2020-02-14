@@ -8,7 +8,10 @@ import app.dto.assemblers.DtoAssemblerInterface;
 import app.services.EmployeeServiceInterface;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -22,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-
-import java.util.List;
 
 /* ROLE_DIRECTOR operates all employees.
  * ROLE_MANAGER operates only operators from his/her city. */
@@ -58,16 +59,15 @@ public class EmployeeController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Pageable pageable;
-        if (size == null || page == null || sort == null) {
+        if (page == null || size == null || sort == null) {
             pageable = defaultPageable;
         } else {
             pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
         }
 
-        List<Employee> employees = employeeService.readAll(userDetails, city, position, lastName, pageable);
-        Page<Employee> employeesPage = new PageImpl<>(employees, pageable, employees.size());
-        PagedModel<EmployeeDto> dtos = pagedResourcesAssembler.toModel(employeesPage, assembler);
-        return ResponseEntity.ok(dtos);
+        Page<Employee> employees = employeeService.readAll(userDetails, city, position, lastName, pageable);
+        PagedModel<EmployeeDto> dto = pagedResourcesAssembler.toModel(employees, assembler);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("{id}")

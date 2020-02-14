@@ -1,6 +1,6 @@
 package app.domain.validators;
 
-import app.domain.validators.annotations.ValidDate;
+import app.domain.validators.annotations.DateLimit;
 import app.exceptions.BadRequestException;
 
 import lombok.SneakyThrows;
@@ -14,15 +14,19 @@ import javax.validation.ConstraintValidatorContext;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateValidator implements ConstraintValidator<ValidDate, Date> {
+public class DateValidator implements ConstraintValidator<DateLimit, Date> {
 
     private final static Logger log = LogManager.getLogger(DateValidator.class);
 
-    String dateLimit;
+    String lower;
+    String upper;
+    int range;
 
     @Override
-    public void initialize(ValidDate constraintAnnotation) {
-        dateLimit = constraintAnnotation.limit();
+    public void initialize(DateLimit constraintAnnotation) {
+        lower = constraintAnnotation.lower();
+        upper = constraintAnnotation.upper();
+        range = constraintAnnotation.range();
     }
 
     @Override
@@ -34,11 +38,48 @@ public class DateValidator implements ConstraintValidator<ValidDate, Date> {
             BadRequestException exception = new BadRequestException("Date is not entered.");
             log.error(exception);
             throw exception;
+
+        }
+
+        if (!lower.isEmpty() && upper.isEmpty() && range == 0) {
+            Date lowerLimit = new SimpleDateFormat("yyyy-MM-dd").parse(lower);
+            isValid = date.after(lowerLimit);
+
+        } else if (lower.isEmpty() && !upper.isEmpty() && range == 0) {
+            Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
+                    + calcDaysFromMillis(1));
+            isValid = date.before(upperLimit);
+
+        } else if (!lower.isEmpty() && !upper.isEmpty() && range == 0) {
+            Date lowerLimit = new SimpleDateFormat("yyyy-MM-dd").parse(lower);
+            Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
+                    + calcDaysFromMillis(1));
+            isValid = date.after(lowerLimit) && date.before(upperLimit);
+
+        } else if (!lower.isEmpty() && upper.isEmpty() && range != 0) {
+            Date lowerLimit = new SimpleDateFormat("yyyy-MM-dd").parse(lower);
+            Date upperLimit = new Date(lowerLimit.getTime() + calcDaysFromMillis(range + 1));
+            isValid = date.after(lowerLimit) && date.before(upperLimit);
+
+        } else if (lower.isEmpty() && !upper.isEmpty() && range != 0) {
+            Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
+                    + calcDaysFromMillis(1));
+            Date lowerLimit = new Date(upperLimit.getTime() - calcDaysFromMillis(range + 1));
+            isValid = date.after(lowerLimit) && date.before(upperLimit);
+
+        } else if (lower.isEmpty() && upper.isEmpty() && range != 0) {
+            Date upperLimitFromToday = new Date(new Date().getTime() + calcDaysFromMillis(range));
+            isValid = !(date.before(new Date()) || date.after(upperLimitFromToday));
+
         } else {
-            isValid = date.after(new SimpleDateFormat("yyyy-MM-dd").parse(dateLimit));
+            return false;
         }
 
         return isValid;
+    }
+
+    private long calcDaysFromMillis(Integer range) {
+        return ((long) range * 24 * 60 * 60 * 1000);
     }
 
 }

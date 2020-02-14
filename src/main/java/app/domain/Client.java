@@ -1,7 +1,7 @@
 package app.domain;
 
 import app.domain.enums.ClientOccupation;
-import app.domain.validators.annotations.ValidDate;
+import app.domain.validators.annotations.DateLimit;
 
 import lombok.*;
 
@@ -26,8 +26,8 @@ public class Client extends User {
     @Setter
     @Column(name = "date_of_birth", nullable = false)
     @Temporal(TemporalType.DATE)
-    @Past(message = "Date of birth must be less than today.")
-    @ValidDate(limit = "1900-01-01", message = "Date of birth should be between 1900-01-01 and yesterday.")
+    @Past(message = "Date of birth should be in past.")
+    @DateLimit(lower = "1900-01-01", message = "Date of birth should be between 1900-01-01 and today.")
     private Date dateOfBirth;
 
     @NonNull
