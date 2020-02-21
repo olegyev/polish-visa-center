@@ -1,6 +1,6 @@
 package app.dto.assemblers.impl;
 
-import app.controllers.ClientPageController;
+import app.controllers.VisaApplicationController;
 import app.domain.VisaApplication;
 import app.dto.VisaApplicationDto;
 import app.dto.assemblers.DtoAssemblerInterface;
@@ -14,12 +14,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class MyVisaApplicationDtoAssembler
+public class VisaApplicationDtoAssembler
         extends RepresentationModelAssemblerSupport<VisaApplication, VisaApplicationDto>
         implements DtoAssemblerInterface<VisaApplication, VisaApplicationDto> {
 
-    public MyVisaApplicationDtoAssembler() {
-        super(ClientPageController.class, VisaApplicationDto.class);
+    public VisaApplicationDtoAssembler() {
+        super(VisaApplication.class, VisaApplicationDto.class);
     }
 
     @Override
@@ -32,9 +32,15 @@ public class MyVisaApplicationDtoAssembler
         dto.setAppointmentTime(visaApplication.getAppointmentTime());
         dto.setVisaApplicationStatus(visaApplication.getVisaApplicationStatus().toString());
 
-        dto.add(linkTo(methodOn(ClientPageController.class)
-                .getLoggedClientVisaApplication(null))
+        dto.add(linkTo(methodOn(VisaApplicationController.class)
+                .getClientApplication(visaApplication.getClient().getId(), visaApplication.getId()))
                 .withSelfRel());
+
+        dto.add(linkTo(methodOn(VisaApplicationController.class)
+                .getApplications(null, null, null, null,
+                        null, null, null, null, null,
+                        null, null, null, null))
+                .withRel("applications"));
 
         return dto;
     }

@@ -29,7 +29,7 @@ public class VisaDocumentsInfoDtoAssembler
         dto.setDocDescription(docsInfo.getDocDescription());
 
         dto.add(linkTo(methodOn(VisaDocumentsInfoController.class)
-                .getVisaDocumentsInfo(null, null, null, null, null, null, null, null))
+                .getVisaDocumentsInfo(null, null, null, null, null, null, null))
                 .withRel("visaDocumentsInfo"));
 
         return dto;

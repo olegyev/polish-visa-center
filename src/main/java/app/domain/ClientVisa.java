@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.util.Date;
 
@@ -19,6 +20,7 @@ public class ClientVisa extends app.domain.Entity {
 
     @NonNull
     @Column(name = "visa_num", nullable = false, length = 50)
+    @Size(min = 3, max = 50, message = "Length must be between 3 and 50.")
     private String visaNumber;
 
     @Column(name = "visa_type", nullable = false)

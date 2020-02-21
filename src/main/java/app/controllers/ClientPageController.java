@@ -7,7 +7,6 @@ import app.domain.enums.City;
 import app.domain.enums.VisaApplicationStatus;
 import app.dto.*;
 import app.dto.assemblers.DtoAssemblerInterface;
-import app.dto.assemblers.MyProfileDtoAssemblerInterface;
 import app.services.ClientServiceInterface;
 import app.services.VisaApplicationServiceInterface;
 import app.services.VisaDocumentsInfoServiceInterface;
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -40,17 +40,17 @@ public class ClientPageController {
     private final ClientServiceInterface clientService;
     private final VisaApplicationServiceInterface visaApplicationService;
     private final VisaDocumentsInfoServiceInterface docsInfoService;
-    private final MyProfileDtoAssemblerInterface<Client, ClientDtoResponse> clientAssembler;
-    private final DtoAssemblerInterface<VisaApplication, VisaApplicationDtoResponse> visaApplicationAssembler;
-    private final DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDtoResponse> visaApplicationWithDocsAssembler;
+    private final DtoAssemblerInterface<Client, ClientDto> clientAssembler;
+    private final DtoAssemblerInterface<VisaApplication, VisaApplicationDto> visaApplicationAssembler;
+    private final DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDto> visaApplicationWithDocsAssembler;
 
     @Autowired
     public ClientPageController(final ClientServiceInterface clientService,
                                 final VisaApplicationServiceInterface visaApplicationService,
                                 final VisaDocumentsInfoServiceInterface docsInfoService,
-                                final MyProfileDtoAssemblerInterface<Client, ClientDtoResponse> clientAssembler,
-                                final DtoAssemblerInterface<VisaApplication, VisaApplicationDtoResponse> visaApplicationAssembler,
-                                final DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDtoResponse> visaApplicationWithDocsAssembler) {
+                                final @Qualifier("myProfileDtoAssembler") DtoAssemblerInterface<Client, ClientDto> clientAssembler,
+                                final @Qualifier("myVisaApplicationDtoAssembler") DtoAssemblerInterface<VisaApplication, VisaApplicationDto> visaApplicationAssembler,
+                                final @Qualifier("myVisaApplicationWithDocInfoDtoAssembler") DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDto> visaApplicationWithDocsAssembler) {
         this.clientService = clientService;
         this.visaApplicationService = visaApplicationService;
         this.docsInfoService = docsInfoService;
@@ -61,27 +61,26 @@ public class ClientPageController {
 
     @GetMapping("my-profile")
     @Transactional
-    public ResponseEntity<ClientDtoResponse> getLoggedClient(Principal principal) {
+    public ResponseEntity<ClientDto> getLoggedClient(Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
-        ClientDtoResponse dto = clientAssembler.toModel(loggedClient);
+        ClientDto dto = clientAssembler.toModel(loggedClient);
         return ResponseEntity.ok(dto);
     }
 
     /* !!! Update all fields except password and agreement !!! */
     @PutMapping("my-profile")
     @Transactional
-    public ResponseEntity<ClientDtoResponse> updateLoggedClient(@Valid @RequestBody ClientDtoRequest newClient, Principal principal) {
+    public ResponseEntity<ClientDto> updateLoggedClient(@Valid @RequestBody ClientDtoRequest newClient, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
         Client updatedClient = clientService.update(loggedClient.getId(), newClient);
-        ClientDtoResponse dto = clientAssembler.toModel(updatedClient);
+        ClientDto dto = clientAssembler.toModel(updatedClient);
 
         log.info("Client with ID = {} updated him-/herself.", loggedClient.getId());
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
-
     @GetMapping("my-visa-application")
     @Transactional
     public ResponseEntity<?> getLoggedClientVisaApplication(Principal principal) {
@@ -94,7 +93,7 @@ public class ClientPageController {
             status = lastVisaApplication.getVisaApplicationStatus();
         }
 
-        VisaApplicationDtoResponse dto;
+        VisaApplicationDto dto;
 
         if (status == VisaApplicationStatus.DOCS_RECEIVED
                 || status == VisaApplicationStatus.PENDING
@@ -127,7 +126,7 @@ public class ClientPageController {
             if (status == VisaApplicationStatus.BOOKED) {
                 /* Last visa application + documents list + disabled dates and time for update last booked visa application. */
 
-                VisaApplicationWithDocInfoDtoResponse dtoWithDocs = visaApplicationWithDocsAssembler.toModel(lastVisaApplication);
+                VisaApplicationWithDocInfoDto dtoWithDocs = visaApplicationWithDocsAssembler.toModel(lastVisaApplication);
 
                 List<VisaDocumentsInfo> requiredDocs = docsInfoService.readByVisaTypeAndAndOccupation(
                         lastVisaApplication.getRequiredVisaType(), loggedClient.getOccupation());
@@ -155,23 +154,23 @@ public class ClientPageController {
 
     @PostMapping("my-visa-application")
     @Transactional
-    public ResponseEntity<VisaApplicationDtoResponse> addLoggedClientVisaApplication(
+    public ResponseEntity<VisaApplicationDto> addLoggedClientVisaApplication(
             @Valid @RequestBody VisaApplicationDtoRequest visaApplication, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
         VisaApplication createdVisaApplication = visaApplicationService.create(visaApplication, loggedClient);
-        VisaApplicationDtoResponse dto = visaApplicationAssembler.toModel(createdVisaApplication);
+        VisaApplicationDto dto = visaApplicationAssembler.toModel(createdVisaApplication);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
     @PutMapping("my-visa-application")
     @Transactional
-    public ResponseEntity<VisaApplicationDtoResponse> updateLoggedClientVisaApplication(
+    public ResponseEntity<VisaApplicationDto> updateLoggedClientVisaApplication(
             @Valid @RequestBody VisaApplicationDtoRequest newVisaApplication, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
         VisaApplication updatedVisaApplication = visaApplicationService.update(newVisaApplication, loggedClient);
-        VisaApplicationDtoResponse dto = visaApplicationAssembler.toModel(updatedVisaApplication);
+        VisaApplicationDto dto = visaApplicationAssembler.toModel(updatedVisaApplication);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 

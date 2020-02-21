@@ -47,29 +47,29 @@ public class DateValidator implements ConstraintValidator<DateLimit, Date> {
 
         } else if (lower.isEmpty() && !upper.isEmpty() && range == 0) {
             Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
-                    + calcDaysFromMillis(1));
+                    + calcMillisFromDays(1));
             isValid = date.before(upperLimit);
 
         } else if (!lower.isEmpty() && !upper.isEmpty() && range == 0) {
             Date lowerLimit = new SimpleDateFormat("yyyy-MM-dd").parse(lower);
             Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
-                    + calcDaysFromMillis(1));
+                    + calcMillisFromDays(1));
             isValid = date.after(lowerLimit) && date.before(upperLimit);
 
         } else if (!lower.isEmpty() && upper.isEmpty() && range != 0) {
             Date lowerLimit = new SimpleDateFormat("yyyy-MM-dd").parse(lower);
-            Date upperLimit = new Date(lowerLimit.getTime() + calcDaysFromMillis(range + 1));
+            Date upperLimit = new Date(lowerLimit.getTime() + calcMillisFromDays(range + 1));
             isValid = date.after(lowerLimit) && date.before(upperLimit);
 
         } else if (lower.isEmpty() && !upper.isEmpty() && range != 0) {
             Date upperLimit = new Date(new SimpleDateFormat("yyyy-MM-dd").parse(upper).getTime()
-                    + calcDaysFromMillis(1));
-            Date lowerLimit = new Date(upperLimit.getTime() - calcDaysFromMillis(range + 1));
+                    + calcMillisFromDays(1));
+            Date lowerLimit = new Date(upperLimit.getTime() - calcMillisFromDays(range + 1));
             isValid = date.after(lowerLimit) && date.before(upperLimit);
 
         } else if (lower.isEmpty() && upper.isEmpty() && range != 0) {
-            Date upperLimitFromToday = new Date(new Date().getTime() + calcDaysFromMillis(range));
-            isValid = !(date.before(new Date()) || date.after(upperLimitFromToday));
+            Date upperLimitFromToday = new Date(new Date().getTime() + calcMillisFromDays(range));
+            isValid = !(date.before(new Date(new Date().getTime() - calcMillisFromDays(1))) || date.after(upperLimitFromToday));
 
         } else {
             return false;
@@ -78,7 +78,7 @@ public class DateValidator implements ConstraintValidator<DateLimit, Date> {
         return isValid;
     }
 
-    private long calcDaysFromMillis(Integer range) {
+    private long calcMillisFromDays(Integer range) {
         return ((long) range * 24 * 60 * 60 * 1000);
     }
 

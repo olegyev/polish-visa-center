@@ -5,6 +5,8 @@ import app.domain.VisaApplication;
 import app.domain.enums.City;
 import app.domain.enums.VisaApplicationStatus;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +24,10 @@ public interface VisaApplicationRepo extends JpaRepository<VisaApplication, Long
 
     VisaApplication findByCityAndAppointmentDateAndAppointmentTime(City city, Date date, String time);
 
-    List<VisaApplication> readByCityAndVisaApplicationStatus(City city, VisaApplicationStatus status);
+    VisaApplication findByIdAndClient(long id, Client client);
+
+    Page<VisaApplication> findByCityAndVisaApplicationStatus(City city, VisaApplicationStatus status, Pageable pageable);
+
+    List<VisaApplication> findByAppointmentDateAndVisaApplicationStatus(Date date, VisaApplicationStatus status);
 
 }

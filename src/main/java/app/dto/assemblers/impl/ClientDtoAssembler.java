@@ -2,7 +2,7 @@ package app.dto.assemblers.impl;
 
 import app.controllers.ClientController;
 import app.domain.Client;
-import app.dto.ClientDtoResponse;
+import app.dto.ClientDto;
 import app.dto.assemblers.DtoAssemblerInterface;
 
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -15,16 +15,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class ClientDtoAssembler
-        extends RepresentationModelAssemblerSupport<Client, ClientDtoResponse>
-        implements DtoAssemblerInterface<Client, ClientDtoResponse> {
+        extends RepresentationModelAssemblerSupport<Client, ClientDto>
+        implements DtoAssemblerInterface<Client, ClientDto> {
 
     public ClientDtoAssembler() {
-        super(ClientController.class, ClientDtoResponse.class);
+        super(ClientController.class, ClientDto.class);
     }
 
     @Override
-    public ClientDtoResponse toModel(Client client) {
-        ClientDtoResponse dto = createModelWithId(client.getId(), client);
+    public ClientDto toModel(Client client) {
+        ClientDto dto = createModelWithId(client.getId(), client);
 
         dto.setFirstName(client.getFirstName());
         dto.setLastName(client.getLastName());
@@ -38,7 +38,7 @@ public class ClientDtoAssembler
                 .getClients(null, null, null, null, null,
                         null, null, null, null,
                         null, null, null, null,
-                        null, null, null, null, null))
+                        null, null, null, null))
                 .withRel("clients"));
 
         return dto;

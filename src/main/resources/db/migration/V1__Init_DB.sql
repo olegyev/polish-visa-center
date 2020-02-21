@@ -61,7 +61,7 @@ create table if not exists applications_status_history
             primary key,
     application_status varchar(30) not null,
     operator_id bigint not null,
-    setting_date date not null,
+    setting_date timestamp not null,
     application_id bigint not null
         constraint applications_status_history_visa_applications_id_fk
             references visa_applications

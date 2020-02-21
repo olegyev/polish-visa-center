@@ -24,7 +24,7 @@ public class ApplicationStatusHistory extends app.domain.Entity {
 
     @NonNull
     @Column(name = "setting_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date settingDate;
 
     @Column(name = "operator_id", nullable = false)

@@ -6,14 +6,15 @@ import lombok.NoArgsConstructor;
 
 import org.springframework.hateoas.server.core.Relation;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Relation(itemRelation = "application", collectionRelation = "applications")
-public class VisaApplicationWithDocInfoDtoResponse extends VisaApplicationDtoResponse {
+@Relation(itemRelation = "visa", collectionRelation = "visas")
+public class VisaDto extends AbstractDto {
 
-    private List<String> requiredDocs;
+    private String visaNumber;
+    private String visaType;
+    private String issueDate;
+    private String expiryDate;
 
 }

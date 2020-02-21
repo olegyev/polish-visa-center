@@ -36,12 +36,14 @@ public class EmployeeController {
 
     private final EmployeeServiceInterface employeeService;
     private final DtoAssemblerInterface<Employee, EmployeeDto> assembler;
+    private final PagedResourcesAssembler<Employee> pagedResourcesAssembler;
 
     @Autowired
     public EmployeeController(final EmployeeServiceInterface employeeService,
                               final DtoAssemblerInterface<Employee, EmployeeDto> assembler) {
         this.employeeService = employeeService;
         this.assembler = assembler;
+        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null,null);
     }
 
     /* !!! Parameters 'city' and 'position' should be given in uppercase => exact search !!! */
@@ -54,15 +56,14 @@ public class EmployeeController {
                                                                 @RequestParam(required = false) Integer page,
                                                                 @RequestParam(required = false) Integer size,
                                                                 @RequestParam(required = false) String sort,
-                                                                @PageableDefault(sort = {"lastName"}, direction = Sort.Direction.ASC) Pageable defaultPageable,
-                                                                PagedResourcesAssembler<Employee> pagedResourcesAssembler) {
+                                                                @PageableDefault(sort = {"lastName"}, direction = Sort.Direction.ASC) Pageable defaultPageable) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Pageable pageable;
         if (page == null || size == null || sort == null) {
             pageable = defaultPageable;
         } else {
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+            pageable = PageRequest.of(page, size, defaultPageable.getSort());
         }
 
         Page<Employee> employees = employeeService.readAll(userDetails, city, position, lastName, pageable);

@@ -32,7 +32,7 @@ public class EmployeeDtoAssembler
         dto.setCity(employee.getCity().toString());
 
         dto.add(linkTo(methodOn(EmployeeController.class)
-                .getEmployees(null, null, null, null, null, null, null, null))
+                .getEmployees(null, null, null, null, null, null, null))
                 .withRel("employees"));
 
         return dto;

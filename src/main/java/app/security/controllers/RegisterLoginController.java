@@ -92,7 +92,7 @@ public class RegisterLoginController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, uri.toString());
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer_" + loginResponse.getJwt());
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getJwt());
 
         return headers;
     }

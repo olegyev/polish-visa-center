@@ -10,12 +10,8 @@ import org.springframework.hateoas.server.core.Relation;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Relation(itemRelation = "application", collectionRelation = "applications")
-public class VisaApplicationDtoResponse extends AbstractDto {
+public class ClientVisaApplicationDto extends ClientDto {
 
-    private String requiredVisaType;
-    private String city;
-    private String appointmentDate;
-    private String appointmentTime;
-    private String visaApplicationStatus;
+    private VisaApplicationDto visaApplication;
 
 }

@@ -30,12 +30,14 @@ public class VisaDocumentsInfoController {
 
     private final VisaDocumentsInfoServiceInterface docsInfoService;
     private final DtoAssemblerInterface<VisaDocumentsInfo, VisaDocumentsInfoDto> assembler;
+    private final PagedResourcesAssembler<VisaDocumentsInfo> pagedResourcesAssembler;
 
     @Autowired
     public VisaDocumentsInfoController(final VisaDocumentsInfoServiceInterface docsInfoService,
                                        final DtoAssemblerInterface<VisaDocumentsInfo, VisaDocumentsInfoDto> assembler) {
         this.docsInfoService = docsInfoService;
         this.assembler = assembler;
+        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null,null);
     }
 
     /* !!! Parameters 'visaType' and 'occupation' should be given in uppercase => exact search !!! */
@@ -49,13 +51,12 @@ public class VisaDocumentsInfoController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) String sort,
-            @PageableDefault(sort = {"visaType"}, direction = Sort.Direction.ASC) Pageable defaultPageable,
-            PagedResourcesAssembler<VisaDocumentsInfo> pagedResourcesAssembler) {
+            @PageableDefault(sort = {"visaType"}, direction = Sort.Direction.ASC) Pageable defaultPageable) {
         Pageable pageable;
         if (page == null || size == null || sort == null) {
             pageable = defaultPageable;
         } else {
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+            pageable = PageRequest.of(page, size, defaultPageable.getSort());
         }
 
         Page<VisaDocumentsInfo> docsInfo = docsInfoService.readAll(visaType, occupation, docDescription, pageable);

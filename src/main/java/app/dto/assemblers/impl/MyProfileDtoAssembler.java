@@ -2,8 +2,8 @@ package app.dto.assemblers.impl;
 
 import app.controllers.ClientPageController;
 import app.domain.Client;
-import app.dto.ClientDtoResponse;
-import app.dto.assemblers.MyProfileDtoAssemblerInterface;
+import app.dto.ClientDto;
+import app.dto.assemblers.DtoAssemblerInterface;
 
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -15,16 +15,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class MyProfileDtoAssembler
-        extends RepresentationModelAssemblerSupport<Client, ClientDtoResponse>
-        implements MyProfileDtoAssemblerInterface<Client, ClientDtoResponse> {
+        extends RepresentationModelAssemblerSupport<Client, ClientDto>
+        implements DtoAssemblerInterface<Client, ClientDto> {
 
     public MyProfileDtoAssembler() {
-        super(ClientPageController.class, ClientDtoResponse.class);
+        super(ClientPageController.class, ClientDto.class);
     }
 
     @Override
-    public ClientDtoResponse toModel(Client client) {
-        ClientDtoResponse dto = instantiateModel(client);
+    public ClientDto toModel(Client client) {
+        ClientDto dto = instantiateModel(client);
 
         dto.setFirstName(client.getFirstName());
         dto.setLastName(client.getLastName());

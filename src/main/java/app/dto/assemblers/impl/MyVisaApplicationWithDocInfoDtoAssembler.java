@@ -2,7 +2,7 @@ package app.dto.assemblers.impl;
 
 import app.controllers.ClientPageController;
 import app.domain.VisaApplication;
-import app.dto.VisaApplicationWithDocInfoDtoResponse;
+import app.dto.VisaApplicationWithDocInfoDto;
 import app.dto.assemblers.DtoAssemblerInterface;
 
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -15,16 +15,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class MyVisaApplicationWithDocInfoDtoAssembler
-        extends RepresentationModelAssemblerSupport<VisaApplication, VisaApplicationWithDocInfoDtoResponse>
-        implements DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDtoResponse> {
+        extends RepresentationModelAssemblerSupport<VisaApplication, VisaApplicationWithDocInfoDto>
+        implements DtoAssemblerInterface<VisaApplication, VisaApplicationWithDocInfoDto> {
 
     public MyVisaApplicationWithDocInfoDtoAssembler() {
-        super(ClientPageController.class, VisaApplicationWithDocInfoDtoResponse.class);
+        super(ClientPageController.class, VisaApplicationWithDocInfoDto.class);
     }
 
     @Override
-    public VisaApplicationWithDocInfoDtoResponse toModel(VisaApplication visaApplication) {
-        VisaApplicationWithDocInfoDtoResponse dto = instantiateModel(visaApplication);
+    public VisaApplicationWithDocInfoDto toModel(VisaApplication visaApplication) {
+        VisaApplicationWithDocInfoDto dto = instantiateModel(visaApplication);
 
         dto.setRequiredVisaType(visaApplication.getRequiredVisaType().toString());
         dto.setCity(visaApplication.getCity().toString());

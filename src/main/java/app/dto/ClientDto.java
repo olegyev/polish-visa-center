@@ -10,7 +10,7 @@ import org.springframework.hateoas.server.core.Relation;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Relation(itemRelation = "client", collectionRelation = "clients")
-public class ClientDtoResponse extends AbstractDto {
+public class ClientDto extends AbstractDto {
 
     private String firstName;
     private String lastName;

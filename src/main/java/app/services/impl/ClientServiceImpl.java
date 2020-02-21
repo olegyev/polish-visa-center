@@ -123,9 +123,9 @@ public class ClientServiceImpl implements ClientServiceInterface {
     @Override
     public Client readById(long id, UserDetails userDetails) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
-        Client employee = readById(id);
+        Client client = readById(id);
 
-        if (employee == null) {
+        if (client == null) {
             NotFoundException exception = new NotFoundException("Cannot find client with ID = " + id + ".");
             log.error(exception);
             throw exception;
@@ -133,7 +133,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
             log.info("Found client with ID = {} by operator with ID = {}.", id, loggedOperator.getId());
         }
 
-        return employee;
+        return client;
     }
 
     @Override

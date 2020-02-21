@@ -32,8 +32,10 @@ public @interface DateLimit {
     /* In days. Including upper and lower limits, e.g.
      * lower = '1900-01-01' + range = 2 -> from 1900-01-01 to 1900-01-03 including;
      * upper = '1900-01-10' - range = 2 -> from 1900-01-08 to 1900-01-10 including;
-     * but excluding today if is given without explicit lower and upper limits,
-     * e.g. today is 1900-01-01 + range = 2 -> valid dates are 1900-01-02 and 1900-01-03.*/
+     * and including today if is given without explicit lower and upper limits,
+     * e.g. today is 1900-01-01 + range = 2 -> valid dates are 1900-01-01, 1900-01-02 and 1900-01-03.
+     * !!! But in last case time can be selected before current time within today's date !!!
+     * !!! Such possibility should be excluded on the front-end !!! */
     int range() default 0;
 
 }
