@@ -7,7 +7,6 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 import java.util.Date;
 
 @Entity
