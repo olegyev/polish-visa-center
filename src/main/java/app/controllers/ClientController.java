@@ -4,8 +4,8 @@ import app.domain.Client;
 import app.domain.enums.City;
 import app.domain.enums.VisaApplicationStatus;
 import app.domain.enums.VisaType;
-import app.dto.ClientDtoRequest;
 import app.dto.ClientDto;
+import app.dto.ClientDtoRequest;
 import app.dto.assemblers.DtoAssemblerInterface;
 import app.services.ClientServiceInterface;
 
@@ -43,7 +43,7 @@ public class ClientController {
                             final @Qualifier("clientDtoAssembler") DtoAssemblerInterface<Client, ClientDto> assembler) {
         this.clientService = clientService;
         this.assembler = assembler;
-        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null,null);
+        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
     }
 
     /* !!! Client's registration (create-functionality) is in app.security.controllers.RegisterLoginController !!! */

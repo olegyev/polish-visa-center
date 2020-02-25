@@ -43,7 +43,7 @@ public class EmployeeController {
                               final DtoAssemblerInterface<Employee, EmployeeDto> assembler) {
         this.employeeService = employeeService;
         this.assembler = assembler;
-        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null,null);
+        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
     }
 
     /* !!! Parameters 'city' and 'position' should be given in uppercase => exact search !!! */

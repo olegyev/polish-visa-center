@@ -81,6 +81,7 @@ public class ClientPageController {
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
+
     @GetMapping("my-visa-application")
     @Transactional
     public ResponseEntity<?> getLoggedClientVisaApplication(Principal principal) {

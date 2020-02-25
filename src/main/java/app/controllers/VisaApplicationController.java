@@ -5,6 +5,7 @@ import app.domain.enums.City;
 import app.domain.enums.VisaApplicationStatus;
 import app.domain.enums.VisaType;
 import app.dto.ClientVisaApplicationDto;
+import app.dto.ClientVisaApplicationWithDocInfoDto;
 import app.dto.ClientVisaApplicationWithHistoryDto;
 import app.dto.VisaApplicationDto;
 import app.dto.assemblers.DtoAssemblerInterface;
@@ -36,17 +37,20 @@ public class VisaApplicationController {
     private final DtoAssemblerInterface<VisaApplication, VisaApplicationDto> visaApplicationAssembler;
     private final DtoAssemblerInterface<VisaApplication, ClientVisaApplicationDto> clientApplicationAssembler;
     private final DtoAssemblerInterface<VisaApplication, ClientVisaApplicationWithHistoryDto> historyAssembler;
+    private final DtoAssemblerInterface<VisaApplication, ClientVisaApplicationWithDocInfoDto> clientApplicationWithDocAssembler;
     private final PagedResourcesAssembler<VisaApplication> pagedResourcesAssembler;
 
     @Autowired
     public VisaApplicationController(final VisaApplicationServiceInterface visaApplicationService,
                                      final @Qualifier("visaApplicationDtoAssembler") DtoAssemblerInterface<VisaApplication, VisaApplicationDto> visaApplicationAssembler,
                                      final @Qualifier("clientVisaApplicationDtoAssembler") DtoAssemblerInterface<VisaApplication, ClientVisaApplicationDto> clientApplicationAssembler,
-                                     final @Qualifier("clientVisaApplicationWithHistoryDtoAssembler") DtoAssemblerInterface<VisaApplication, ClientVisaApplicationWithHistoryDto> historyAssembler) {
+                                     final @Qualifier("clientVisaApplicationWithHistoryDtoAssembler") DtoAssemblerInterface<VisaApplication, ClientVisaApplicationWithHistoryDto> historyAssembler,
+                                     final @Qualifier("clientVisaApplicationWithDocInfoDtoAssembler") DtoAssemblerInterface<VisaApplication, ClientVisaApplicationWithDocInfoDto> clientApplicationWithDocAssembler) {
         this.visaApplicationService = visaApplicationService;
         this.visaApplicationAssembler = visaApplicationAssembler;
         this.clientApplicationAssembler = clientApplicationAssembler;
         this.historyAssembler = historyAssembler;
+        this.clientApplicationWithDocAssembler = clientApplicationWithDocAssembler;
         this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
     }
 
@@ -89,11 +93,11 @@ public class VisaApplicationController {
     @GetMapping("clients/{clientId}/applications/{applicationId}")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER"})
     @Transactional
-    public ResponseEntity<ClientVisaApplicationDto> getClientApplication(@PathVariable long clientId,
-                                                                         @PathVariable long applicationId) {
+    public ResponseEntity<ClientVisaApplicationWithDocInfoDto> getClientApplication(@PathVariable long clientId,
+                                                                                    @PathVariable long applicationId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         VisaApplication visaApplication = visaApplicationService.readByClientIdAndApplicationId(userDetails, clientId, applicationId);
-        ClientVisaApplicationDto dto = clientApplicationAssembler.toModel(visaApplication);
+        ClientVisaApplicationWithDocInfoDto dto = clientApplicationWithDocAssembler.toModel(visaApplication);
         return ResponseEntity.ok(dto);
     }
 

@@ -37,7 +37,7 @@ public class VisaDocumentsInfoController {
                                        final DtoAssemblerInterface<VisaDocumentsInfo, VisaDocumentsInfoDto> assembler) {
         this.docsInfoService = docsInfoService;
         this.assembler = assembler;
-        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null,null);
+        this.pagedResourcesAssembler = new PagedResourcesAssembler<>(null, null);
     }
 
     /* !!! Parameters 'visaType' and 'occupation' should be given in uppercase => exact search !!! */
