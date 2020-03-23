@@ -12,6 +12,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <li>JSON</li>
   <li>HATEOAS</li>
   <li>log4j2</li>
+  <li>Spring Boot Test</li>
   <li>JUnit</li>
   <li>Lombok</li>
 </ul>
