@@ -19,3 +19,6 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
 
 <h2>Domain structure & Functionality:</h2>
 <img src="images/func.png">
+
+<h2>Client-side workflow:</h2>
+<img src="images/client.png">
