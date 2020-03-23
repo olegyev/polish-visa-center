@@ -15,3 +15,6 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <li>JUnit</li>
   <li>Lombok</li>
 </ul>
+
+<h2>Functionality:</h2>
+<img src="images/func.png">
