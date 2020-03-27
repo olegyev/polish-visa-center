@@ -24,7 +24,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
 <img src="images/client_logic.png">
 
 <h2>DB model:</h2>
-<img src="images/db.png">
+<img src="images/db_struct.png">
 
 <h2>Resources:</h2>
 
@@ -698,7 +698,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>/clients</td>
   <td>OPERATOR</td>
   <td>Get all clients' data.<br />
-    Filtering is available by following parameters (client's fields and fields from nested entities - visa application
+    Filtering is available by following parameters (client's fields and fields of nested entities - visa application
     and visa): lastName, passportId, email, phoneNumber, requiredVisaType, appointmentCity, appointmentDate,
     appointmentTime, visaApplicationStatus, visaNumber, issuedVisaType, issueDate, expiryDate. Also by multiple values for
     one key, e.g. <i>?appointmentCity=MINSK,GRODNO</i>.<br />
@@ -1132,7 +1132,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
       header: Status Code: 400 Bad Request
       body: You can update visa applications only in &lt;operator's_city&gt;.
     </pre>
-    If there is another application with fields appointmentCity, appointmentDate and appointmentTime equals to those indicated in form for updating:
+    If there is another application with fields <i>appointmentCity</i>, <i>appointmentDate</i> and <i>appointmentTime</i> equals to those indicated in form for updating:
     <pre>
       header: Status Code: 400 Bad Request
       body: There is another appointment already booked in &lt;new_appointmentCity&gt; on &lt;new_appointmentDate&gt; at
@@ -1666,7 +1666,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
                 }
             }
     </pre>
-    If appointmentDate and/or appointmentTime filled incorrectly:
+    If appointment date and/or appointment time filled incorrectly:
     <pre>
       header: Status Code: 406 Not Acceptable
       body: {
@@ -1692,7 +1692,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
       header: Status Code: 400 Bad Request
       body: You already have visa application in processing.
     </pre>
-    If there is another appointment with fields city, appointmentDate and appointmentTime equals to those indicated in form for inserting:
+    If there is another appointment with fields <i>city</i>, <i>appointmentDate</i> and <i>appointmentTime</i> equals to those indicated in form for inserting:
     <pre>
       header: Status Code: 400 Bad Request
       body: There is another appointment already booked in &lt;city&gt; on &lt;appointmentDate&gt; at &lt;appointmentTime&gt;.
@@ -1858,7 +1858,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
                 }
             }
     </pre>
-    If appointmentDate and/or appointmentTime filled incorrectly:
+    If appointment date and/or appointment time filled incorrectly:
     <pre>
       header: Status Code: 406 Not Acceptable
       body: {
@@ -1879,7 +1879,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
       header: Status Code: 400 Bad Request
       body: The form filled incorrectly.
     </pre>
-    If there is another appointment with fields city, appointmentDate and appointmentTime equals to those indicated in form for inserting:
+    If there is another appointment with fields <i>city</i>, <i>appointmentDate</i> and <i>appointmentTime</i> equals to those indicated in form for inserting:
     <pre>
       header: Status Code: 400 Bad Request
       body: There is another appointment already booked in &lt;city&gt; on &lt;appointmentDate&gt; at &lt;appointmentTime&gt;.
