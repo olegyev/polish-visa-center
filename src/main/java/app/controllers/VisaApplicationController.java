@@ -24,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -59,7 +58,6 @@ public class VisaApplicationController {
     /* !!! Parameters 'size', 'page' and 'sort' are used only for JSON representation - by default (implicitly) they are available in Pageable interface !!! */
     @GetMapping("applications")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER"})
-    @Transactional
     public ResponseEntity<PagedModel<VisaApplicationDto>> getApplications(@RequestParam(required = false) VisaType requiredVisaType,
                                                                           @RequestParam(required = false) City appointmentCity,
                                                                           @RequestParam(required = false) String appointmentDate,
@@ -92,7 +90,6 @@ public class VisaApplicationController {
 
     @GetMapping("clients/{clientId}/applications/{applicationId}")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER"})
-    @Transactional
     public ResponseEntity<ClientVisaApplicationWithDocInfoDto> getClientApplication(@PathVariable long clientId,
                                                                                     @PathVariable long applicationId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,7 +109,6 @@ public class VisaApplicationController {
      */
     @PutMapping("clients/{clientId}/applications/{applicationId}")
     @RolesAllowed("ROLE_OPERATOR")
-    @Transactional
     public ResponseEntity<ClientVisaApplicationDto> updateClientApplication(@PathVariable long clientId,
                                                                             @PathVariable long applicationId,
                                                                             @Valid @RequestBody VisaApplication newVisaApplication) {
@@ -124,7 +120,6 @@ public class VisaApplicationController {
 
     @DeleteMapping("clients/{clientId}/applications/{applicationId}")
     @RolesAllowed("ROLE_OPERATOR")
-    @Transactional
     public ResponseEntity<HttpStatus> deleteClientApplication(@PathVariable long clientId,
                                                               @PathVariable long applicationId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -134,7 +129,6 @@ public class VisaApplicationController {
 
     @GetMapping("clients/{clientId}/applications/{applicationId}/history")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER"})
-    @Transactional
     public ResponseEntity<ClientVisaApplicationWithHistoryDto> getClientApplicationHistory(@PathVariable long clientId,
                                                                                            @PathVariable long applicationId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

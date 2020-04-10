@@ -23,6 +23,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long>, JpaSpecific
 
     List<Employee> readByPositionAndCity(EmployeePosition position, City city);
 
-    long countAdminsByCityAndPosition(City city, EmployeePosition position);
+    long countEmployeesByCityAndPosition(City city, EmployeePosition position);
 
 }

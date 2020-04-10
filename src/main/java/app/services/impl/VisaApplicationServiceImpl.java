@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,6 +58,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public VisaApplication create(VisaApplicationDtoRequest visaApplication, Client loggedClient) {
         VisaApplication lastVisaApplication = readLastVisaApplicationByClient(loggedClient);
         VisaApplicationStatus status = null;
@@ -82,7 +84,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
                 log.error("Attempt to add new visa application failed due to the incorrect form filling.");
                 throw new BadRequestException("The form filled incorrectly.");
             } else if (anotherVisaApplication != null) {
-                throw new BadRequestException("There are another appointment already booked in " + visaApplication.getCity().toString() +
+                throw new BadRequestException("There is another appointment already booked in " + visaApplication.getCity().toString() +
                         " on " + new SimpleDateFormat("yyyy-MM-dd").format(visaApplication.getAppointmentDate()) +
                         " at " + visaApplication.getAppointmentTime() + ".");
             } else {
@@ -109,11 +111,13 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public VisaApplication create(VisaApplication visaApplication) {
         return visaApplicationRepo.save(visaApplication);
     }
 
     @Override
+    @Transactional
     public Page<VisaApplication> readAll(UserDetails userDetails, VisaType requiredVisaType, City appointmentCity, String appointmentDate,
                                          String appointmentTime, VisaApplicationStatus visaApplicationStatus, String lastName,
                                          String passportId, String email, String phoneNumber, Pageable pageable) {
@@ -153,16 +157,19 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public Page<VisaApplication> readAll(Specification<VisaApplication> spec, Pageable pageable) {
         return visaApplicationRepo.findAll(spec, pageable);
     }
 
     @Override
+    @Transactional
     public VisaApplication readById(long id) {
         return visaApplicationRepo.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public VisaApplication readByClientIdAndApplicationId(UserDetails userDetails, long clientId, long applicationId) {
         Employee loggedEmployee = employeeService.readByEmail(userDetails.getUsername());
         VisaApplication visaApplication = visaApplicationRepo.findByIdAndClient(applicationId, clientService.readById(clientId));
@@ -180,6 +187,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public VisaApplication update(VisaApplicationDtoRequest newVisaApplication, Client loggedClient) {
         VisaApplication lastVisaApplication = readLastVisaApplicationByClient(loggedClient);
         VisaApplicationStatus status = null;
@@ -204,7 +212,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
                         loggedClient.getId());
                 throw new BadRequestException("The form filled incorrectly.");
             } else if (anotherVisaApplication != null) {
-                throw new BadRequestException("There are another appointment already booked in " + newVisaApplication.getCity().toString() +
+                throw new BadRequestException("There is another appointment already booked in " + newVisaApplication.getCity().toString() +
                         " on " + new SimpleDateFormat("yyyy-MM-dd").format(newVisaApplication.getAppointmentDate()) +
                         " at " + newVisaApplication.getAppointmentTime() + ".");
             } else {
@@ -223,6 +231,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public VisaApplication update(UserDetails userDetails, long clientId, long applicationId, VisaApplication newVisaApplication) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         VisaApplication visaApplicationFromDb = readByClientIdAndApplicationId(userDetails, clientId, applicationId);
@@ -320,11 +329,13 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public VisaApplication update(long id, VisaApplication visaApplication) {
         return visaApplicationRepo.save(visaApplication);
     }
 
     @Override
+    @Transactional
     public void delete(Client loggedClient) {
         VisaApplication lastVisaApplication = readLastVisaApplicationByClient(loggedClient);
         VisaApplicationStatus status = null;
@@ -345,6 +356,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public void delete(UserDetails userDetails, long clientId, long applicationId) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         VisaApplication visaApplication = readByClientIdAndApplicationId(userDetails, clientId, applicationId);
@@ -365,31 +377,37 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         visaApplicationRepo.deleteById(id);
     }
 
     @Override
+    @Transactional
     public VisaApplication readLastVisaApplicationByClient(Client client) {
         return visaApplicationRepo.findLastVisaApplicationByClient(client);
     }
 
     @Override
+    @Transactional
     public VisaApplication readByCityAndDateAndTime(City city, Date date, String time) {
         return visaApplicationRepo.findByCityAndAppointmentDateAndAppointmentTime(city, date, time);
     }
 
     @Override
+    @Transactional
     public Page<VisaApplication> readByCityAndStatus(City city, VisaApplicationStatus status, Pageable pageable) {
         return visaApplicationRepo.findByCityAndVisaApplicationStatus(city, status, pageable);
     }
 
     @Override
+    @Transactional
     public List<VisaApplication> readByAppointmentDateAndStatus(Date date, VisaApplicationStatus status) {
         return visaApplicationRepo.findByAppointmentDateAndVisaApplicationStatus(date, status);
     }
 
     @Override
+    @Transactional
     public List<ApplicationStatusHistory> readVisaApplicationHistory(UserDetails userDetails, VisaApplication visaApplication) {
         Employee loggedEmployee = employeeService.readByEmail(userDetails.getUsername());
         log.info("Found status' changes history for visa application with ID = {} by employee with ID = {}.", visaApplication.getId(), loggedEmployee.getId());
@@ -405,6 +423,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
     }
 
     @Override
+    @Transactional
     public DisabledTimeAndDatesDto findTimeAndDatesToDisable(City city, int workDayBegin, int workDayEnd, int stepInMinutes) {
         Map<String, String[]> disabledTime = findTimeToDisable(city);
         String[] disabledDates = findDatesToDisable(disabledTime, city, workDayBegin, workDayEnd, stepInMinutes);
@@ -431,7 +450,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
         for (Date dateInDb : datesInDb) {
             List<String> timeInDb = findTimeByCityAndDate(bookedAppsInCity, dateInDb);
 
-            if (employeeService.countAdminsByCityAndPosition(city, EmployeePosition.OPERATOR) == 1) {
+            if (employeeService.countEmployeesByCityAndPosition(city, EmployeePosition.OPERATOR) == 1) {
                 timeToDisable.addAll(timeInDb);
             } else {
                 int timeCounter = 1;
@@ -440,7 +459,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
                         timeCounter++;
                     }
 
-                    if (timeCounter == employeeService.countAdminsByCityAndPosition(city, EmployeePosition.OPERATOR)) {
+                    if (timeCounter == employeeService.countEmployeesByCityAndPosition(city, EmployeePosition.OPERATOR)) {
                         timeToDisable.add(timeInDb.get(i));
                         timeCounter = 1;
                     }
@@ -457,7 +476,7 @@ public class VisaApplicationServiceImpl implements VisaApplicationServiceInterfa
 
     private String[] findDatesToDisable(Map<String, String[]> disabledTime, City city,
                                         int workDayBegin, int workDayEnd, int stepInMinutes) {
-        long operatorsNum = employeeService.countAdminsByCityAndPosition(city, EmployeePosition.OPERATOR);
+        long operatorsNum = employeeService.countEmployeesByCityAndPosition(city, EmployeePosition.OPERATOR);
         long maxApplicationsNum = (workDayEnd - workDayBegin) * (60 / stepInMinutes) * operatorsNum;
 
         List<String> disabledDates = new ArrayList<>();

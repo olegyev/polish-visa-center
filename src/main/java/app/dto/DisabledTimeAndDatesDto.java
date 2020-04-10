@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DisabledTimeAndDatesDto {
+public class DisabledTimeAndDatesDto extends AbstractDto {
 
     private String city;
     private Map<String, String[]> disabledTimeByDate;

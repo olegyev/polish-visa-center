@@ -19,7 +19,7 @@ public class VisaApplicationDtoAssembler
         implements DtoAssemblerInterface<VisaApplication, VisaApplicationDto> {
 
     public VisaApplicationDtoAssembler() {
-        super(VisaApplication.class, VisaApplicationDto.class);
+        super(VisaApplicationController.class, VisaApplicationDto.class);
     }
 
     @Override

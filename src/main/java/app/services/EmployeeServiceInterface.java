@@ -28,6 +28,6 @@ public interface EmployeeServiceInterface extends UserServiceInterface<Employee>
 
     List<Employee> readByPositionAndCity(EmployeePosition position, City city);
 
-    long countAdminsByCityAndPosition(City city, EmployeePosition position);
+    long countEmployeesByCityAndPosition(City city, EmployeePosition position);
 
 }

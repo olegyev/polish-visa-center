@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
+    @Transactional
     public Client create(Client client) {
         if (!bodyIsOk(client)) {
             log.error("Attempt to add new client failed due to the incorrect form filling.");
@@ -63,13 +65,14 @@ public class ClientServiceImpl implements ClientServiceInterface {
         client.setPassword(PasswordEncoder.encryptPassword(client.getPassword()));
         Client createdClient = clientRepo.save(client);
 
-        log.info("New employee added to a database with ID = {} and username = '{}'.",
+        log.info("New client added to the database with ID = {} and username = '{}'.",
                 createdClient.getId(), createdClient.getEmail());
 
         return createdClient;
     }
 
     @Override
+    @Transactional
     public Page<Client> readAll(UserDetails userDetails,
                                 String lastName,
                                 String passportId,
@@ -116,11 +119,13 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
+    @Transactional
     public Page<Client> readAll(Specification<Client> spec, Pageable pageable) {
         return clientRepo.findAll(spec, pageable);
     }
 
     @Override
+    @Transactional
     public Client readById(long id, UserDetails userDetails) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         Client client = readById(id);
@@ -137,32 +142,30 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
+    @Transactional
     public Client readById(long id) {
         return clientRepo.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public Client update(long id, ClientDtoRequest newClient, UserDetails userDetails) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
-
-        Client updatedClient;
-        if (!bodyIsOk(newClient)) {
-            log.error("Attempt to update a client with ID = {} failed due to the incorrect form filling.", id);
-            throw new BadRequestException("The form filled incorrectly.");
-        } else {
-            updatedClient = update(id, newClient);
-        }
-
+        Client updatedClient = update(id, newClient);
         log.info("Updated client with ID = {} by operator with ID = {}.", id, loggedOperator.getId());
-
         return updatedClient;
     }
 
     @Override
+    @Transactional
     public Client update(long id, ClientDtoRequest newClient) {
         Client clientFromDb = readById(id);
 
-        if (clientFromDb == null) {
+        if (!bodyIsOk(newClient)) {
+            log.error("Attempt to update a client with ID = {} failed due to the incorrect form filling.", id);
+            throw new BadRequestException("The form filled incorrectly.");
+
+        } else if (clientFromDb == null) {
             NotFoundException exception = new NotFoundException("Cannot find client with ID = " + id + ".");
             log.error(exception);
             throw exception;
@@ -172,7 +175,7 @@ public class ClientServiceImpl implements ClientServiceInterface {
             log.error("Attempt to update a client with ID = {} failed due to the presence of another"
                             + " client with the same email and/or passport ID in the database (EMAIL = '{}', PASSPORT ID = '{}').",
                     id, newClient.getEmail(), newClient.getPassportId());
-            throw new BadRequestException("There is another client in database with such email and/or passport ID.");
+            throw new BadRequestException("There is another client in the database with such email and/or passport ID.");
 
         } else {
             BeanUtils.copyProperties(newClient, clientFromDb, "id", "password", "personalDataProcAgreement");
@@ -182,11 +185,13 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
+    @Transactional
     public Client update(long id, Client client) {
         return clientRepo.save(client);
     }
 
     @Override
+    @Transactional
     public void delete(long id, UserDetails userDetails) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         Client client = readById(id);
@@ -203,21 +208,25 @@ public class ClientServiceImpl implements ClientServiceInterface {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         clientRepo.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Client readByEmail(String email) {
         return clientRepo.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public List<Client> readByLastName(String lastName) {
         return clientRepo.findByLastName(lastName);
     }
 
     @Override
+    @Transactional
     public Client readByPassportId(String passportId) {
         return clientRepo.findByPassportId(passportId);
     }

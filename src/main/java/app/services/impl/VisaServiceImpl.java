@@ -22,6 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 public class VisaServiceImpl implements VisaServiceInterface {
@@ -42,6 +45,7 @@ public class VisaServiceImpl implements VisaServiceInterface {
     }
 
     @Override
+    @Transactional
     public ClientVisa create(UserDetails userDetails, ClientVisa visa, long clientId) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         Client client = clientService.readById(clientId);
@@ -59,16 +63,23 @@ public class VisaServiceImpl implements VisaServiceInterface {
             throw new BadRequestException("The form filled incorrectly.");
         }
 
+        if (!expiryDateIsLaterThanIssueDate(visa.getIssueDate(), visa.getExpiryDate())) {
+            log.error("Attempt to add new client's visa failed because indicated issue date is later than expiry date.");
+            throw new BadRequestException("The expiry date should be later than issue date.");
+        }
+
         log.info("Created new visa for client with ID = {} by employee with ID = {}.", clientId, loggedOperator.getId());
         return create(visa);
     }
 
     @Override
+    @Transactional
     public ClientVisa create(ClientVisa clientVisa) {
         return visaRepo.save(clientVisa);
     }
 
     @Override
+    @Transactional
     public Page<ClientVisa> readAll(UserDetails userDetails, String visaNumber, VisaType issuedVisaType, String issueDate,
                                     String expiryDate, String lastName, String passportId, String email,
                                     String phoneNumber, Pageable pageable) {
@@ -99,16 +110,19 @@ public class VisaServiceImpl implements VisaServiceInterface {
     }
 
     @Override
+    @Transactional
     public Page<ClientVisa> readAll(Specification<ClientVisa> spec, Pageable pageable) {
         return visaRepo.findAll(spec, pageable);
     }
 
     @Override
+    @Transactional
     public ClientVisa readById(long id) {
         return visaRepo.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public ClientVisa readByClientIdAndApplicationId(UserDetails userDetails, long clientId, long visaId) {
         Employee loggedEmployee = employeeService.readByEmail(userDetails.getUsername());
         ClientVisa visa = visaRepo.findByIdAndClient(visaId, clientService.readById(clientId));
@@ -126,6 +140,7 @@ public class VisaServiceImpl implements VisaServiceInterface {
     }
 
     @Override
+    @Transactional
     public ClientVisa update(UserDetails userDetails, long clientId, long visaId, ClientVisa newVisa) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         ClientVisa visaFromDb = readByClientIdAndApplicationId(userDetails, clientId, visaId);
@@ -134,10 +149,17 @@ public class VisaServiceImpl implements VisaServiceInterface {
             log.error("Attempt to update client's visa with ID = {} by operator with ID = {} failed due to the incorrect form filling.",
                     visaId, loggedOperator.getId());
             throw new BadRequestException("The form filled incorrectly.");
-        } else if (visaFromDb == null) {
+        }
+
+        if (visaFromDb == null) {
             BadRequestException exception = new BadRequestException("Cannot find visa with ID = " + visaId + " for client with ID = " + clientId + ".");
             log.error(exception);
             throw exception;
+        }
+
+        if (!expiryDateIsLaterThanIssueDate(newVisa.getIssueDate(), newVisa.getExpiryDate())) {
+            log.error("Attempt to add new client's visa failed because indicated issue date is later than expiry date.");
+            throw new BadRequestException("The expiry date should be later than issue date.");
         }
 
         BeanUtils.copyProperties(newVisa, visaFromDb, "id", "client");
@@ -149,11 +171,13 @@ public class VisaServiceImpl implements VisaServiceInterface {
     }
 
     @Override
+    @Transactional
     public ClientVisa update(long id, ClientVisa clientVisa) {
         return visaRepo.save(clientVisa);
     }
 
     @Override
+    @Transactional
     public void delete(UserDetails userDetails, long clientId, long visaId) {
         Employee loggedOperator = employeeService.readByEmail(userDetails.getUsername());
         ClientVisa visa = readByClientIdAndApplicationId(userDetails, clientId, visaId);
@@ -172,8 +196,13 @@ public class VisaServiceImpl implements VisaServiceInterface {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         visaRepo.deleteById(id);
+    }
+
+    private boolean expiryDateIsLaterThanIssueDate(Date issueDate, Date expiryDate) {
+        return expiryDate.getTime() > issueDate.getTime();
     }
 
     private boolean bodyIsOk(ClientVisa body) {

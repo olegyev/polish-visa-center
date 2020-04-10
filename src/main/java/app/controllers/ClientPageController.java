@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -60,7 +59,6 @@ public class ClientPageController {
     }
 
     @GetMapping("my-profile")
-    @Transactional
     public ResponseEntity<ClientDto> getLoggedClient(Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
@@ -70,7 +68,6 @@ public class ClientPageController {
 
     /* !!! Update all fields except password and agreement !!! */
     @PutMapping("my-profile")
-    @Transactional
     public ResponseEntity<ClientDto> updateLoggedClient(@Valid @RequestBody ClientDtoRequest newClient, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
@@ -83,7 +80,6 @@ public class ClientPageController {
     }
 
     @GetMapping("my-visa-application")
-    @Transactional
     public ResponseEntity<?> getLoggedClientVisaApplication(Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());
@@ -125,7 +121,7 @@ public class ClientPageController {
             disabledTimeAndDates.add(inGrodno);
 
             if (status == VisaApplicationStatus.BOOKED) {
-                /* Last visa application + documents list + disabled dates and time for update last booked visa application. */
+                /* Last visa application + documents list + disabled dates and time for updating last booked visa application. */
 
                 VisaApplicationWithDocInfoDto dtoWithDocs = visaApplicationWithDocsAssembler.toModel(lastVisaApplication);
 
@@ -146,7 +142,7 @@ public class ClientPageController {
                 return ResponseEntity.ok(dtoWithDocsAndDisabledTimeAndDates);
 
             } else {
-                /* Disabled dates and time for add new visa application. */
+                /* Disabled dates and time for adding new visa application. */
 
                 return ResponseEntity.ok(disabledTimeAndDates);
             }
@@ -154,7 +150,6 @@ public class ClientPageController {
     }
 
     @PostMapping("my-visa-application")
-    @Transactional
     public ResponseEntity<VisaApplicationDto> addLoggedClientVisaApplication(
             @Valid @RequestBody VisaApplicationDtoRequest visaApplication, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
@@ -165,7 +160,6 @@ public class ClientPageController {
     }
 
     @PutMapping("my-visa-application")
-    @Transactional
     public ResponseEntity<VisaApplicationDto> updateLoggedClientVisaApplication(
             @Valid @RequestBody VisaApplicationDtoRequest newVisaApplication, Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
@@ -176,7 +170,6 @@ public class ClientPageController {
     }
 
     @DeleteMapping("my-visa-application")
-    @Transactional
     public ResponseEntity<HttpStatus> deleteLoggedClientVisaApplication(Principal principal) {
         User loggedUserInfo = (User) ((Authentication) principal).getPrincipal();
         Client loggedClient = clientService.readByEmail(loggedUserInfo.getUsername());

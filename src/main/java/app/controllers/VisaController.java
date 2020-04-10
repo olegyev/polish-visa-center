@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -47,7 +46,6 @@ public class VisaController {
     /* !!! Parameters 'size', 'page' and 'sort' are used only for JSON representation - by default (implicitly) they are available in Pageable interface !!! */
     @GetMapping("visas")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER", "ROLE_DIRECTOR"})
-    @Transactional
     public ResponseEntity<PagedModel<VisaDto>> getVisas(@RequestParam(required = false) String visaNumber,
                                                         @RequestParam(required = false) VisaType issuedVisaType,
                                                         @RequestParam(required = false) String issueDate,
@@ -79,7 +77,6 @@ public class VisaController {
 
     @GetMapping("clients/{clientId}/visas/{visaId}")
     @RolesAllowed({"ROLE_OPERATOR", "ROLE_MANAGER", "ROLE_DIRECTOR"})
-    @Transactional
     public ResponseEntity<ClientVisaDto> getClientVisa(@PathVariable long clientId,
                                                        @PathVariable long visaId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -90,7 +87,6 @@ public class VisaController {
 
     @PostMapping("clients/{clientId}/new-visa")
     @RolesAllowed("ROLE_OPERATOR")
-    @Transactional
     public ResponseEntity<ClientVisaDto> addClientVisa(@Valid @RequestBody ClientVisa visa,
                                                        @PathVariable long clientId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -101,7 +97,6 @@ public class VisaController {
 
     @PutMapping("clients/{clientId}/visas/{visaId}")
     @RolesAllowed("ROLE_OPERATOR")
-    @Transactional
     public ResponseEntity<ClientVisaDto> updateClientVisa(@PathVariable long clientId,
                                                           @PathVariable long visaId,
                                                           @Valid @RequestBody ClientVisa newVisa) {
@@ -113,7 +108,6 @@ public class VisaController {
 
     @DeleteMapping("clients/{clientId}/visas/{visaId}")
     @RolesAllowed("ROLE_OPERATOR")
-    @Transactional
     public ResponseEntity<HttpStatus> updateClientVisa(@PathVariable long clientId,
                                                        @PathVariable long visaId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

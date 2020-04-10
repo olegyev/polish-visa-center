@@ -29,7 +29,7 @@ public class ClientVisaApplicationWithDocInfoDtoAssembler
 
     @Autowired
     public ClientVisaApplicationWithDocInfoDtoAssembler(final VisaDocumentsInfoServiceInterface docsInfoService) {
-        super(VisaApplication.class, ClientVisaApplicationWithDocInfoDto.class);
+        super(VisaApplicationController.class, ClientVisaApplicationWithDocInfoDto.class);
         this.docsInfoService = docsInfoService;
     }
 

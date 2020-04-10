@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public VisaDocumentsInfo create(VisaDocumentsInfo visaDocumentsInfo) {
         if (!bodyIsOk(visaDocumentsInfo)) {
             log.error("Attempt to add new visa documents' information failed due to the incorrect form filling.");
@@ -46,6 +48,7 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public Page<VisaDocumentsInfo> readAll(VisaType visaType, ClientOccupation occupation, String docDescription, Pageable pageable) {
         Specification<VisaDocumentsInfo> spec = Specification
                 .where(visaType == null ? null : VisaDocumentsInfoJpaSpecification.visaTypeContains(visaType))
@@ -64,11 +67,13 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public Page<VisaDocumentsInfo> readAll(Specification<VisaDocumentsInfo> spec, Pageable pageable) {
         return docsInfoRepo.findAll(spec, pageable);
     }
 
     @Override
+    @Transactional
     public VisaDocumentsInfo readById(long id) {
         VisaDocumentsInfo docsInfo = docsInfoRepo.findById(id).orElse(null);
 
@@ -82,6 +87,7 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public VisaDocumentsInfo update(long id, VisaDocumentsInfo newVisaDocumentsInfo) {
         if (!bodyIsOk(newVisaDocumentsInfo)) {
             log.error("Attempt to update visa documents' information with ID = {}  failed due to the incorrect form filling.", id);
@@ -97,6 +103,7 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         VisaDocumentsInfo docsInfo = readById(id);
         log.info("Deleted visa documents' information with ID = {}.", id);
@@ -104,6 +111,7 @@ public class VisaDocumentsInfoServiceImpl implements VisaDocumentsInfoServiceInt
     }
 
     @Override
+    @Transactional
     public List<VisaDocumentsInfo> readByVisaTypeAndAndOccupation(VisaType visaType, ClientOccupation occupation) {
         log.info("Found visa documents' information by visa type = {} and client's occupation = {}.", visaType, occupation);
         return docsInfoRepo.findByVisaTypeAndOccupation(visaType, occupation);

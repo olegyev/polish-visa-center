@@ -34,7 +34,7 @@ public class ClientVisaApplicationWithHistoryDtoAssembler
 
     @Autowired
     public ClientVisaApplicationWithHistoryDtoAssembler(final VisaApplicationServiceInterface visaApplicationService) {
-        super(VisaApplication.class, ClientVisaApplicationWithHistoryDto.class);
+        super(VisaApplicationController.class, ClientVisaApplicationWithHistoryDto.class);
         this.visaApplicationService = visaApplicationService;
     }
 

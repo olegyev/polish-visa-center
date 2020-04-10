@@ -23,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -52,7 +51,6 @@ public class ClientController {
      * 'visaType', 'issueDate' and 'expiryDate' should be given in uppercase => exact search !!! */
     /* !!! Parameters 'size', 'page' and 'sort' are used only for JSON representation - by default (implicitly) they are available in Pageable interface !!! */
     @GetMapping
-    @Transactional
     public ResponseEntity<PagedModel<ClientDto>> getClients(@RequestParam(required = false) String lastName,
                                                             @RequestParam(required = false) String passportId,
                                                             @RequestParam(required = false) String email,
@@ -89,7 +87,6 @@ public class ClientController {
     }
 
     @GetMapping("{id}")
-    @Transactional
     public ResponseEntity<ClientDto> getClientById(@PathVariable long id, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Client client = clientService.readById(id, userDetails);
@@ -99,7 +96,6 @@ public class ClientController {
 
     /* !!! Update all fields except password and agreement !!! */
     @PutMapping("{id}")
-    @Transactional
     public ResponseEntity<ClientDto> updateClient(@PathVariable long id, @Valid @RequestBody ClientDtoRequest newClient,
                                                   Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -109,7 +105,6 @@ public class ClientController {
     }
 
     @DeleteMapping("{id}")
-    @Transactional
     public ResponseEntity<HttpStatus> deleteClient(@PathVariable long id, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         clientService.delete(id, userDetails);

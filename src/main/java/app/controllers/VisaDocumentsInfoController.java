@@ -17,7 +17,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -43,7 +42,6 @@ public class VisaDocumentsInfoController {
     /* !!! Parameters 'visaType' and 'occupation' should be given in uppercase => exact search !!! */
     /* !!! Parameters 'size', 'page' and 'sort' are used only for JSON representation - by default (implicitly) they are available in Pageable interface !!! */
     @GetMapping
-    @Transactional
     public ResponseEntity<PagedModel<VisaDocumentsInfoDto>> getVisaDocumentsInfo(
             @RequestParam(required = false) VisaType visaType,
             @RequestParam(required = false) ClientOccupation occupation,
@@ -65,7 +63,6 @@ public class VisaDocumentsInfoController {
     }
 
     @GetMapping("{id}")
-    @Transactional
     public ResponseEntity<VisaDocumentsInfoDto> getVisaDocumentsInfoById(@PathVariable long id) {
         VisaDocumentsInfo docsInfo = docsInfoService.readById(id);
         VisaDocumentsInfoDto dto = assembler.toModel(docsInfo);
@@ -73,7 +70,6 @@ public class VisaDocumentsInfoController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<VisaDocumentsInfoDto> addVisaDocumentsInfo(@Valid @RequestBody VisaDocumentsInfo docsInfo) {
         VisaDocumentsInfo createdDocsInfo = docsInfoService.create(docsInfo);
         VisaDocumentsInfoDto dto = assembler.toModel(createdDocsInfo);
@@ -81,7 +77,6 @@ public class VisaDocumentsInfoController {
     }
 
     @PutMapping("{id}")
-    @Transactional
     public ResponseEntity<VisaDocumentsInfoDto> updateVisaDocumentsInfo(@PathVariable long id, @Valid @RequestBody VisaDocumentsInfo newDocsInfo) {
         VisaDocumentsInfo updatedDocsInfo = docsInfoService.update(id, newDocsInfo);
         VisaDocumentsInfoDto dto = assembler.toModel(updatedDocsInfo);
@@ -89,7 +84,6 @@ public class VisaDocumentsInfoController {
     }
 
     @DeleteMapping("{id}")
-    @Transactional
     public ResponseEntity<HttpStatus> deleteVisaDocumentsInfo(@PathVariable long id) {
         docsInfoService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);

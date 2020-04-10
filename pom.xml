@@ -33,6 +33,7 @@
         <log4j-api.version>2.2</log4j-api.version>
         <log4j-core.version>2.2</log4j-core.version>
         <log4j-web.version>2.7</log4j-web.version>
+        <h2.version>LATEST</h2.version>
     </properties>
 
     <dependencies>
@@ -124,9 +125,15 @@
         </dependency>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>LATEST</version>
+            <version>${h2.version}</version>
         </dependency>
 
         <!-- Lombok -->
@@ -135,11 +142,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

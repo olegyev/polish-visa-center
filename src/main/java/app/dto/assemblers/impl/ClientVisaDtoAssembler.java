@@ -1,5 +1,6 @@
 package app.dto.assemblers.impl;
 
+import app.controllers.VisaController;
 import app.domain.Client;
 import app.domain.ClientVisa;
 import app.domain.VisaApplication;
@@ -23,7 +24,7 @@ public class ClientVisaDtoAssembler
 
     @Autowired
     public ClientVisaDtoAssembler(final @Qualifier("visaDtoAssembler") DtoAssemblerInterface<ClientVisa, VisaDto> visaDtoAssembler) {
-        super(VisaApplication.class, ClientVisaDto.class);
+        super(VisaController.class, ClientVisaDto.class);
         this.visaDtoAssembler = visaDtoAssembler;
     }
 

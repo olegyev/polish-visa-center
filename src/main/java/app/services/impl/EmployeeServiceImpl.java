@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public Employee create(Employee employee, UserDetails userDetails) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
 
@@ -65,11 +67,13 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public Employee create(Employee employee) {
         return employeeRepo.save(employee);
     }
 
     @Override
+    @Transactional
     public Page<Employee> readAll(UserDetails userDetails, City city, EmployeePosition position, String lastName, Pageable pageable) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
 
@@ -137,11 +141,13 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public Page<Employee> readAll(Specification<Employee> spec, Pageable pageable) {
         return employeeRepo.findAll(spec, pageable);
     }
 
     @Override
+    @Transactional
     public Employee readById(long id, UserDetails userDetails) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
         Employee employee = readById(id);
@@ -164,11 +170,13 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public Employee readById(long id) {
         return employeeRepo.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public Employee update(long id, Employee newEmployee, UserDetails userDetails) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
 
@@ -208,6 +216,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public Employee update(long id, Employee newEmployee) {
         Employee employeeFromDb = readById(id);
 
@@ -218,7 +227,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
         } else if (emailIsInDataBase(newEmployee) && !employeeFromDb.getEmail().equals(newEmployee.getEmail())) {
             log.error("Attempt to update an employee with ID = {} failed due to the presence of another"
                     + " employee with the same email in the database (EMAIL = '{}').", id, newEmployee.getEmail());
-            throw new BadRequestException("There is another employee in database with such email.");
+            throw new BadRequestException("There is another employee in the database with such email.");
         } else {
             BeanUtils.copyProperties(newEmployee, employeeFromDb, "id");
         }
@@ -228,6 +237,7 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public void delete(long id, UserDetails userDetails) {
         Employee loggedEmployee = readByEmail(userDetails.getUsername());
         Employee employee = readById(id);
@@ -258,38 +268,45 @@ public class EmployeeServiceImpl implements EmployeeServiceInterface {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         employeeRepo.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Employee readByEmail(String email) {
         return employeeRepo.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public List<Employee> readByLastName(String lastName) {
         return employeeRepo.findByLastName(lastName.toUpperCase());
     }
 
     @Override
+    @Transactional
     public List<Employee> readByCity(City city) {
         return employeeRepo.findByCity(city);
     }
 
     @Override
+    @Transactional
     public List<Employee> readByPosition(EmployeePosition position) {
         return employeeRepo.findByPosition(position);
     }
 
     @Override
+    @Transactional
     public List<Employee> readByPositionAndCity(EmployeePosition position, City city) {
         return employeeRepo.readByPositionAndCity(position, city);
     }
 
     @Override
-    public long countAdminsByCityAndPosition(City city, EmployeePosition position) {
-        return employeeRepo.countAdminsByCityAndPosition(city, position);
+    @Transactional
+    public long countEmployeesByCityAndPosition(City city, EmployeePosition position) {
+        return employeeRepo.countEmployeesByCityAndPosition(city, position);
     }
 
     private boolean bodyIsOk(Employee body) {

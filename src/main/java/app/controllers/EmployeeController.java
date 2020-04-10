@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,7 +48,6 @@ public class EmployeeController {
     /* !!! Parameters 'city' and 'position' should be given in uppercase => exact search !!! */
     /* !!! Parameters 'size', 'page' and 'sort' are used only for JSON representation - by default (implicitly) they are available in Pageable interface !!! */
     @GetMapping
-    @Transactional
     public ResponseEntity<PagedModel<EmployeeDto>> getEmployees(@RequestParam(required = false) City city,
                                                                 @RequestParam(required = false) EmployeePosition position,
                                                                 @RequestParam(required = false) String lastName,
@@ -72,7 +70,6 @@ public class EmployeeController {
     }
 
     @GetMapping("{id}")
-    @Transactional
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable long id, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Employee employee = employeeService.readById(id, userDetails);
@@ -81,7 +78,6 @@ public class EmployeeController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody Employee employee, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Employee createdEmployee = employeeService.create(employee, userDetails);
@@ -90,7 +86,6 @@ public class EmployeeController {
     }
 
     @PutMapping("{id}")
-    @Transactional
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable long id, @Valid @RequestBody Employee newEmployee,
                                                       Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -100,7 +95,6 @@ public class EmployeeController {
     }
 
     @DeleteMapping("{id}")
-    @Transactional
     public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable long id, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         employeeService.delete(id, userDetails);
