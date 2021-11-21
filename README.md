@@ -4,7 +4,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
 <h2>Technologies:</h2>
 <ul>
   <li>Java 8</li>
-  <li>Spring (Boot, Data, Security)</li>
+  <li>Spring (Boot, Web, Data, Security)</li>
   <li>PostgreSQL</li>
   <li>Flyway</li>
   <li>Maven</li>
@@ -44,7 +44,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
     <td>POST</td>
     <td>/registration</td>
     <td>ALL</td>
-    <td>Registration of the user with the role CLIENT. Confirmation of registration via the link sent to the email.</td>
+    <td>Registration of the user with the role CLIENT.</td>
     <td>
         <pre>
           header: Content-Type: application/json
@@ -81,7 +81,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
                       "field": "firstName",
                                "message": "Only uppercase latin letters, spaces and dashes are allowed."
                     }
-                  ] 
+                  ]
                 }
         </pre>
       If any field is absent:
@@ -217,7 +217,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
    <td>/employees</td>
    <td>DIRECTOR, MANAGER</td>
    <td>Get all employees (all - for DIRECTOR, only operators from manager's city - for MANAGER).<br />
-       Filtering is available by following parameters: city, position, lastName. Also by multiple values for one key, e.g.        <i>?city=MINSK,GRODNO</i>, and by word fragment, e.g. <i>?lastName=do</i> -> all entries with last names containing        "do".<br />
+       Filtering is available by following parameters: city, position, lastName. Also by word fragment, e.g. <i>?lastName=do</i> -> all entries with last names containing "do".<br />
        Sorting and paging are available.
    </td>
    <td>
@@ -508,7 +508,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>/documents-info</td>
   <td>DIRECTOR</td>
   <td>Get all required visa documents' info.<br />
-      Filtering is available by following parameters: visaType, occupation, docDescription. Also by multiple values for           one key, e.g. <i>?visaType=C,D</i>, and by word fragment, e.g. <i>?docDescription=pass</i> -> all entries with words         containing "pass".<br />
+      Filtering is available by following parameters: visaType, occupation, docDescription. Also by word fragment, e.g. <i>?docDescription=pass</i> -> all entries with words containing "pass".<br />
       Sorting and paging are available.</td>
   <td>
     <pre>
@@ -700,8 +700,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>Get all clients' data.<br />
     Filtering is available by following parameters (client's fields and fields of nested entities - visa application
     and visa): lastName, passportId, email, phoneNumber, requiredVisaType, appointmentCity, appointmentDate,
-    appointmentTime, visaApplicationStatus, visaNumber, issuedVisaType, issueDate, expiryDate. Also by multiple values for
-    one key, e.g. <i>?appointmentCity=MINSK,GRODNO</i>.<br />
+    appointmentTime, visaApplicationStatus, visaNumber, issuedVisaType, issueDate, expiryDate.<br />
     Sorting and paging are available.
   <td>
     <pre>
@@ -717,7 +716,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
                 "_embedded": {
                     "clients": [
                         {
-                            "firstName": "SARA",
+                            "firstName": "SARAH",
                             "lastName": "CONNOR",
                             "email": "sarah_connor@skynet.net",
                             "phoneNumber": "375442002020",
@@ -932,7 +931,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>/applications</td>
   <td>OPERATOR, MANAGER</td>
   <td>By default (without filtering parameters), get visa applications with status BOOKED in operator's / manager's city.<br />
-    With filtering parameters, get all matching visa applications. Filtering is available by following parameters (all visa application's fields and client's fields): requiredVisaType, appointmentCity, appointmentDate, appointmentTime, visaApplicationStatus, lastName, passportId, email, phoneNumber. Also by multiple values for one key, e.g. <i>?appointmentCity=MINSK,GRODNO</i>.<br />
+    With filtering parameters, get all matching visa applications. Filtering is available by following parameters (all visa application's fields and client's fields): requiredVisaType, appointmentCity, appointmentDate, appointmentTime, visaApplicationStatus, lastName, passportId, email, phoneNumber.<br />
     Sorting and paging are available.
   <td>
     <pre>
@@ -1055,12 +1054,12 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>clients/{clientId}/applications/{applicationId}</td>
   <td>OPERATOR</td>
   <td>Update client's visa application by ID. OPERATOR can update only visa application's from operator's city.<br />
-    If status == BOOKED and application is in future operator can update all the fields, but status only on appointment date and not together with other fields.<br />
-    If status == DOCS_RECEIVED, PENDING, CONFIRMED or DENIED operator can update only status - other filled fields will be ignored and remain the same as in database.<br />
-    If status == DID_NOT_COME or ISSUED visa application is archived and cannot be updated.<br />
-    If status == DOCS_INCOMPLETE and visa application's appointment date is not gone only its status can be updated, otherwise it is archived and cannot be updated.<br />
+    If status == BOOKED and application is in future, operator can update all the fields, but status only on appointment date and not together with other fields.<br />
+    If status == DOCS_RECEIVED, PENDING, CONFIRMED or DENIED, operator can update only status - other filled fields will be ignored and remain the same as in database.<br />
+    If status == DID_NOT_COME or ISSUED, visa application is archived and cannot be updated.<br />
+    If status == DOCS_INCOMPLETE and visa application's appointment date is not gone, only its status can be updated, otherwise it is archived and cannot be updated.<br />
     Status DID_NOT_COME is set automatically everyday at 23:59 to the visa applications, which status remained as BOOKED till that time of today (see class app.services.util.VisitChecker, is called from app.Runner).<br />
-    New status is saved into table applications_status_history.
+    New status is saved into the table applications_status_history.
   </td>
   <td>
     <pre>
@@ -1343,7 +1342,7 @@ This is a RESTful web-service simulating the work processes of the Polish Visa C
   <td>/visas</td>
   <td>OPERATOR, MANAGER, DIRECTOR</td>
   <td>Get all visas.<br />
-    Filtering is available by following parameters (all visa's and client's fields): visaNumber, issuedVisaType, issueDate, expiryDate, lastName, passportId, email, phoneNumber. Also by multiple values for one key, e.g. <i>?issuedVisaType=C,D</i>.<br />
+    Filtering is available by following parameters (all visa's and client's fields): visaNumber, issuedVisaType, issueDate, expiryDate, lastName, passportId, email, phoneNumber.<br />
     Sorting and paging are available.
   </td>
   <td>
