@@ -1,4 +1,4 @@
-# PolishVisaCenter
+# Polish Visa Center
 This is a RESTful web-service simulating the work processes of the Polish Visa Center in Belarus.
 
 <h2>Technologies:</h2>
