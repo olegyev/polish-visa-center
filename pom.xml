@@ -33,7 +33,7 @@
         <log4j-api.version>2.17.1</log4j-api.version>
         <log4j-core.version>2.17.1</log4j-core.version>
         <log4j-web.version>2.7</log4j-web.version>
-        <h2.version>2.0.202</h2.version>
+        <h2.version>2.0.206</h2.version>
     </properties>
 
     <dependencies>
